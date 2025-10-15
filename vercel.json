@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "outputDirectory": ".",
   "routes": [
     {
       "src": "/(.*\\.(html|css|js|png|jpg|jpeg|gif|svg|ico))",

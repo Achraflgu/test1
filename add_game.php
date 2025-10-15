@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 $newTitle = $_POST['newTitle'];
 $newDescription = $_POST['newDescription'];
@@ -25,9 +27,9 @@ if ($stmt->execute()) {
     echo "Game added successfully!";
 } else {
     // Insertion failed
-    echo "Error adding game: " . $stmt->error;
+    echo "Error adding game: " . $stmt->errorInfo()[2];
 }
 
-$stmt->close();
-$conn->close();
+$stmt// PDO connection closes automatically;
+$conn// PDO connection closes automatically;
 ?>

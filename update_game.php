@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $gameId = $_POST['gameId'];
@@ -28,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$updateStmt) {
         // Handle preparation error
-        echo json_encode(['success' => false, 'message' => 'Error preparing update statement: ' . $conn->error]);
+        echo json_encode(['success' => false, 'message' => 'Error preparing update statement: ' . $conn->errorInfo()[2]]);
     } else {
         $updateStmt->bind_param("sssssi", $newTitle, $newDescription, $newLink, $newPhoto, $newCategory, $gameId);
 
@@ -36,16 +38,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($updateStmt->execute()) {
             echo json_encode(['success' => true, 'message' => 'Game updated successfully']);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Error updating game: ' . $updateStmt->error]);
+            echo json_encode(['success' => false, 'message' => 'Error updating game: ' . $updateStmt->errorInfo()[2]]);
         }
 
         // Close the prepared statement
-        $updateStmt->close();
+        $updateStmt// PDO connection closes automatically;
     }
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 }
 
 // Close the database connection
-$conn->close();
+$conn// PDO connection closes automatically;
 ?>

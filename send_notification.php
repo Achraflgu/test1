@@ -2,7 +2,9 @@
 // send_notification.php
 
 // Include necessary files and database connection
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 // Get the notification message from the POST data
 $notificationMessage = $_POST['message'];
@@ -26,7 +28,7 @@ if ($result && $result->num_rows > 0) {
     }
 
     // Close the prepared statement
-    $insertNotificationSql->close();
+    $insertNotificationSql// PDO connection closes automatically;
 
     echo json_encode(['success' => true]);
 } else {
@@ -34,5 +36,5 @@ if ($result && $result->num_rows > 0) {
 }
 
 // Close the database connection
-$conn->close();
+$conn// PDO connection closes automatically;
 ?>

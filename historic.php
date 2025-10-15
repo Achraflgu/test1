@@ -5,7 +5,9 @@
 $selectedKidId = isset($_GET['kidId']) ? intval($_GET['kidId']) : 0;
 
 // Include your database connection
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 // Number of records per page
 $recordsPerPage = 10;
@@ -25,7 +27,7 @@ $result = $stmt->get_result();
 
 // Check for errors in the query execution
 if (!$result) {
-    die("Error in SQL query: " . $conn->error);
+    die("Error in SQL query: " . $conn->errorInfo()[2]);
 }
 
 // Start HTML output
@@ -276,9 +278,9 @@ h2 {
     }
 
     // Close the database connections
-    $stmt->close();
-    $stmtCount->close();
-    $conn->close();
+    $stmt// PDO connection closes automatically;
+    $stmtCount// PDO connection closes automatically;
+    $conn// PDO connection closes automatically;
     ?>
 </div>
 

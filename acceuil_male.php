@@ -9,7 +9,9 @@ if (!isset($_GET['kidId'])) {
 
 // Include your database connection
 include('log_history.php');
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 // Assuming you have the user's selected kid ID passed as URL parameter
 $selectedKidId = $_GET['kidId']; // Get the kid's ID from the URL

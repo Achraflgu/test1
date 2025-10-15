@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $storyId = $_POST['storyId'];
@@ -10,11 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($conn->query($deleteSql) === TRUE) {
         echo json_encode(['success' => true, 'message' => 'Story deleted successfully']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Error deleting story: ' . $conn->error]);
+        echo json_encode(['success' => false, 'message' => 'Error deleting story: ' . $conn->errorInfo()[2]]);
     }
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 }
 
-$conn->close();
+$conn// PDO connection closes automatically;
 ?>

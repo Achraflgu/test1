@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $childId = $_POST['child_id'];
@@ -11,9 +13,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($conn->query($updateChildSql) === TRUE) {
         echo "Child details updated successfully.";
     } else {
-        echo "Error updating child details: " . $conn->error;
+        echo "Error updating child details: " . $conn->errorInfo()[2];
     }
 }
 
-$conn->close();
+$conn// PDO connection closes automatically;
 ?>

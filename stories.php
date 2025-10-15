@@ -41,11 +41,15 @@
                     </thead>
                     <tbody>
                         <?php
-                        include('connexion.php');
+                        require_once('config/database.php');
+                        $database = new Database();
+                        $conn = $database->getConnection();
                         $storiesSql = "SELECT * FROM stories";
-                        $storiesResult = $conn->query($storiesSql);
+                        $stmt = $conn->prepare($storiesSql);
+                        $stmt->execute();
+                        $storiesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                        while ($storyRow = $storiesResult->fetch_assoc()) {
+                        foreach ($storiesResult as $storyRow) {
                             echo '<tr>';
                             echo '<td>' . $storyRow['id'] . '</td>';
                             echo '<td>' . $storyRow['story_title'] . '</td>';
@@ -274,11 +278,15 @@
                                     <select class="form-select" id="storyCategoryModal" name="newCategory" required>
                                         <!-- Fetch categories dynamically from the database -->
                                         <?php
-                                        include('connexion.php');
+                                        require_once('config/database.php');
+                                        $database = new Database();
+                                        $conn = $database->getConnection();
                                         $categoriesSql = "SELECT DISTINCT category FROM stories";
-                                        $categoriesResult = $conn->query($categoriesSql);
+                                        $stmt = $conn->prepare($categoriesSql);
+                                        $stmt->execute();
+                                        $categoriesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                        while ($categoryRow = $categoriesResult->fetch_assoc()) {
+                                        foreach ($categoriesResult as $categoryRow) {
                                             echo '<option value="' . $categoryRow['category'] . '">' . $categoryRow['category'] . '</option>';
                                         }
                                         ?>
@@ -339,11 +347,15 @@
                                     <select class="form-select" id="addStoryCategoryModal" name="newCategory" required>
                                         <!-- Fetch categories dynamically from the database -->
                                         <?php
-                                        include('connexion.php');
+                                        require_once('config/database.php');
+                                        $database = new Database();
+                                        $conn = $database->getConnection();
                                         $categoriesSql = "SELECT DISTINCT category FROM stories";
-                                        $categoriesResult = $conn->query($categoriesSql);
+                                        $stmt = $conn->prepare($categoriesSql);
+                                        $stmt->execute();
+                                        $categoriesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                        while ($categoryRow = $categoriesResult->fetch_assoc()) {
+                                        foreach ($categoriesResult as $categoryRow) {
                                             echo '<option value="' . $categoryRow['category'] . '">' . $categoryRow['category'] . '</option>';
                                         }
                                         ?>

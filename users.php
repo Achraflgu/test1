@@ -39,11 +39,13 @@
         </thead>
         <tbody>
             <?php
-            include('connexion.php');
+            require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
             $usersSql = "SELECT * FROM users";
-            $usersResult = $conn->query($usersSql);
+            $stmt = $conn->prepare($usersSql);\n$stmt->execute();\n$usersResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            while ($userRow = $usersResult->fetch_assoc()) {
+            foreach ($usersResult as $userRow) {
                 echo '<tr>';
                 echo '<td>' . $userRow['id'] . '</td>';
                 echo '<td>' . $userRow['email'] . '</td>';

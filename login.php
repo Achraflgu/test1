@@ -1,17 +1,22 @@
 <?php
 session_start();
 
-    include('connexion.php');
+    require_once('config/database.php');
+    $database = new Database();
+    $conn = $database->getConnection();
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $enteredEmail = $_POST['loginEmail'];
         $enteredPassword = trim($_POST['loginPassword']);
     
-        $sql = "SELECT * FROM users WHERE email='$enteredEmail'";
-        $result = $conn->query($sql);
+        $sql = "SELECT * FROM users WHERE email = :email";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':email', $enteredEmail);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
+        if (count($result) > 0) {
+            $row = $result[0];
             if ($enteredPassword == $row['password']) {
                 if ($row['isAdmin'] == 1) {
                     // Admin user, redirect to the admin page
@@ -21,11 +26,14 @@ session_start();
                     // Fetch information about children from the 'children' table
                     $_SESSION['user_id'] = $row['id'];
                     $userId = $row['id'];
-                    $childrenSql = "SELECT * FROM children WHERE user_id = $userId";
-                    $childrenResult = $conn->query($childrenSql);
+                    $childrenSql = "SELECT * FROM children WHERE user_id = :user_id";
+                    $childrenStmt = $conn->prepare($childrenSql);
+                    $childrenStmt->bindParam(':user_id', $userId);
+                    $childrenStmt->execute();
+                    $childrenResult = $childrenStmt->fetchAll(PDO::FETCH_ASSOC);
     
                     // Check if there are children
-                    if ($childrenResult->num_rows > 0) {
+                    if (count($childrenResult) > 0) {
                         echo '<div class="container mt-10">';
                         echo '<div class="row justify-content-center align-items-center">';
                         echo '<div class="col-lg-10 col-md-12 text-center">';
@@ -35,7 +43,7 @@ session_start();
                         echo '<form id="profileForm" method="post" action="gender.php">';
                         echo '<div class="custom-radio d-flex justify-content-center">'; // Remove flex-wrap or set it to nowrap
                     
-                        while ($kidRow = $childrenResult->fetch_assoc()) {
+                        foreach ($childrenResult as $kidRow) {
                             $kidGender = $kidRow["kid_gender"];
                             $kidName = $kidRow["kid_name"];
                             $kidPhoto = $kidRow["kid_photo"];
@@ -84,17 +92,19 @@ session_start();
                 echo "Incorrect password!";
             }
     
-            // Close the database connection
-            $conn->close();
+            // Database connection will be closed automatically by PDO
         }
     }
 
     if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['userId'])) {
         $userId = $_GET['userId'];
-        $childrenSql = "SELECT * FROM children WHERE user_id = $userId";
-        $childrenResult = $conn->query($childrenSql);
+        $childrenSql = "SELECT * FROM children WHERE user_id = :user_id";
+        $childrenStmt = $conn->prepare($childrenSql);
+        $childrenStmt->bindParam(':user_id', $userId);
+        $childrenStmt->execute();
+        $childrenResult = $childrenStmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($childrenResult->num_rows > 0) {
+        if (count($childrenResult) > 0) {
             echo '<div class="container mt-5">';
             echo '<div class="row justify-content-center align-items-center">';
             echo '<div class="col-lg-10 col-md-12 text-center">';
@@ -102,7 +112,7 @@ session_start();
             echo '<form id="profileForm" method="post" action="gender.php">';
             echo '<div class="custom-radio d-flex justify-content-center">'; // Remove flex-wrap or set it to nowrap
         
-            while ($kidRow = $childrenResult->fetch_assoc()) {
+            foreach ($childrenResult as $kidRow) {
                 $kidGender = $kidRow["kid_gender"];
                 $kidName = $kidRow["kid_name"];
                 $kidPhoto = $kidRow["kid_photo"];

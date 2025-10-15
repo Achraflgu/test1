@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the user ID from the POST data
@@ -7,11 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Fetch children information for the selected user
     $getChildrenSql = "SELECT * FROM children WHERE user_id = $userId";
-    $childrenResult = $conn->query($getChildrenSql);
+    $stmt = $conn->prepare($getChildrenSql);\n$stmt->execute();\n$childrenResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Fetch the result as an associative array
     $childrenData = [];
-    while ($child = $childrenResult->fetch_assoc()) {
+    foreach ($childrenResult as $child) {
         $childrenData[] = [
             'id' => $child['id'],
             'name' => $child['kid_name'],

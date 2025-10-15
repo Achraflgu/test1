@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 // Fonction pour afficher les enfants pour un ID utilisateur donné
 function displayChildrenForUser($userId)
@@ -7,11 +9,11 @@ function displayChildrenForUser($userId)
     global $conn;
 
     $childrenSql = "SELECT * FROM children WHERE user_id = $userId";
-    $childrenResult = $conn->query($childrenSql);
+    $stmt = $conn->prepare($childrenSql);\n$stmt->execute();\n$childrenResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $childrenData = array();
 
-    while ($childRow = $childrenResult->fetch_assoc()) {
+    foreach ($childrenResult as $childRow) {
         $childrenData[] = $childRow;
     }
 
@@ -23,7 +25,7 @@ if (isset($_POST['action'])) {
     if ($_POST['action'] == 'get_users') {
         // Requête AJAX pour obtenir et afficher les utilisateurs
         $usersSql = "SELECT * FROM users";
-        $usersResult = $conn->query($usersSql);
+        $stmt = $conn->prepare($usersSql);\n$stmt->execute();\n$usersResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         echo '<table class="table">
                 <thead>
@@ -36,7 +38,7 @@ if (isset($_POST['action'])) {
                 </thead>
                 <tbody>';
 
-        while ($userRow = $usersResult->fetch_assoc()) {
+        foreach ($usersResult as $userRow) {
             echo '<tr>
                     <td>' . $userRow['id'] . '</td>
                     <td>' . $userRow['email'] . '</td>
@@ -136,8 +138,8 @@ if (isset($_POST['action'])) {
             echo 'Child updated successfully';
         } else {
             // Log any errors to the server logs
-            error_log('Error updating child: ' . $conn->error);
-            echo 'Error updating child: ' . $conn->error;
+            error_log('Error updating child: ' . $conn->errorInfo()[2]);
+            echo 'Error updating child: ' . $conn->errorInfo()[2];
         }
     } elseif ($_POST['action'] == 'delete_child') {
         // Requête AJAX pour supprimer un enfant
@@ -150,8 +152,8 @@ if (isset($_POST['action'])) {
             echo 'Child deleted successfully';
         } else {
             // Log any errors to the server logs
-            error_log('Error deleting child: ' . $conn->error);
-            echo 'Error deleting child: ' . $conn->error;
+            error_log('Error deleting child: ' . $conn->errorInfo()[2]);
+            echo 'Error deleting child: ' . $conn->errorInfo()[2];
         }
     }
 }

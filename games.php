@@ -40,11 +40,15 @@
         </thead>
         <tbody>
             <?php
-            include('connexion.php');
+            require_once('config/database.php');
+            $database = new Database();
+            $conn = $database->getConnection();
             $gamesSql = "SELECT * FROM games";
-            $gamesResult = $conn->query($gamesSql);
+            $stmt = $conn->prepare($gamesSql);
+            $stmt->execute();
+            $gamesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            while ($gameRow = $gamesResult->fetch_assoc()) {
+            foreach ($gamesResult as $gameRow) {
                 echo '<tr>';
                 echo '<td>' . $gameRow['id'] . '</td>';
                 echo '<td>' . $gameRow['game_title'] . '</td>';
@@ -275,11 +279,15 @@
                                     <select class="form-select" id="gameCategoryModal" name="newCategory" required>
                                         <!-- Fetch categories dynamically from the database -->
                                         <?php
-                                        include('connexion.php');
+                                        require_once('config/database.php');
+            $database = new Database();
+            $conn = $database->getConnection();
                                         $categoriesSql = "SELECT DISTINCT category FROM games";
-                                        $categoriesResult = $conn->query($categoriesSql);
+                                        $stmt = $conn->prepare($categoriesSql);
+                                        $stmt->execute();
+                                        $categoriesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                        while ($categoryRow = $categoriesResult->fetch_assoc()) {
+                                        foreach ($categoriesResult as $categoryRow) {
                                             echo '<option value="' . $categoryRow['category'] . '">' . $categoryRow['category'] . '</option>';
                                         }
                                         ?>
@@ -335,11 +343,15 @@
                                     <select class="form-select" id="addGameCategoryModal" name="newCategory" required>
                                         <!-- Fetch categories dynamically from the database -->
                                         <?php
-                                        include('connexion.php');
+                                        require_once('config/database.php');
+            $database = new Database();
+            $conn = $database->getConnection();
                                         $categoriesSql = "SELECT DISTINCT category FROM games";
-                                        $categoriesResult = $conn->query($categoriesSql);
+                                        $stmt = $conn->prepare($categoriesSql);
+                                        $stmt->execute();
+                                        $categoriesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                        while ($categoryRow = $categoriesResult->fetch_assoc()) {
+                                        foreach ($categoriesResult as $categoryRow) {
                                             echo '<option value="' . $categoryRow['category'] . '">' . $categoryRow['category'] . '</option>';
                                         }
                                         ?>

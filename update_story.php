@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $storyId = $_POST['storyId'];
@@ -32,15 +34,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($updateStmt->execute()) {
         echo json_encode(['success' => true, 'message' => 'Story updated successfully']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Error updating story: ' . $conn->error]);
+        echo json_encode(['success' => false, 'message' => 'Error updating story: ' . $conn->errorInfo()[2]]);
     }
 
     // Close the prepared statement
-    $updateStmt->close();
+    $updateStmt// PDO connection closes automatically;
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 }
 
 // Close the database connection
-$conn->close();
+$conn// PDO connection closes automatically;
 ?>

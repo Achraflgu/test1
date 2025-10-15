@@ -1,7 +1,9 @@
 <!-- process_form.php -->
 
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $action = $_GET['action'];
@@ -41,5 +43,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Close the database connection
-$conn->close();
+$conn// PDO connection closes automatically;
 ?>

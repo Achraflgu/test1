@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $email = $_POST['signupEmail'];
@@ -8,14 +10,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $number_of_kids = isset($_POST['numberOfKids']) ? $_POST['numberOfKids'] : 0;
 
     // Insert user information
-    $insertUserSql = "INSERT INTO users (email, password, is_parent, number_of_kids) VALUES (?, ?, ?, ?)";
+    $insertUserSql = "INSERT INTO users (email, password, is_parent, number_of_kids) VALUES (:email, :password, :is_parent, :number_of_kids)";
 
     $stmt = $conn->prepare($insertUserSql);
-    $stmt->bind_param("ssii", $email, $password, $is_parent, $number_of_kids);
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':password', $password);
+    $stmt->bindParam(':is_parent', $is_parent, PDO::PARAM_INT);
+    $stmt->bindParam(':number_of_kids', $number_of_kids, PDO::PARAM_INT);
 
     if ($stmt->execute()) {
         // Get the ID of the newly inserted user
-        $last_id = $conn->insert_id;
+        $last_id = $conn->lastInsertId();
 
         // Insert information for each child
         for ($i = 1; $i <= $number_of_kids; $i++) {
@@ -61,27 +66,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             }
 
             // Insert child information
-            $insertChildSql = "INSERT INTO children (user_id, kid_gender, kid_name, kid_age, kid_photo) VALUES (?, ?, ?, ?, ?)";
+            $insertChildSql = "INSERT INTO children (user_id, kid_gender, kid_name, kid_age, kid_photo) VALUES (:user_id, :kid_gender, :kid_name, :kid_age, :kid_photo)";
 
             $childStmt = $conn->prepare($insertChildSql);
-            $childStmt->bind_param("issss", $last_id, $kidGender, $kidName, $kidAge, $targetFile);
+            $childStmt->bindParam(':user_id', $last_id, PDO::PARAM_INT);
+            $childStmt->bindParam(':kid_gender', $kidGender);
+            $childStmt->bindParam(':kid_name', $kidName);
+            $childStmt->bindParam(':kid_age', $kidAge, PDO::PARAM_INT);
+            $childStmt->bindParam(':kid_photo', $targetFile);
 
             if (!$childStmt->execute()) {
-                echo "Error inserting child information: " . $childStmt->error;
+                echo "Error inserting child information: " . $childStmt->errorInfo()[2];
             }
-
-            $childStmt->close();
         }
 
         // Redirect to login page or any other desired page after successful signup
         header("Location: login.html");
         exit();
     } else {
-        echo "Error inserting user information: " . $stmt->error;
+        echo "Error inserting user information: " . $stmt->errorInfo()[2];
     }
-
-    // Close the prepared statement and the database connection
-    $stmt->close();
-    $conn->close();
 }
 ?>

@@ -2,7 +2,9 @@
 // verify_password.php
 
 // Include your database connection
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 // Assuming you have the user's ID and password passed as POST parameters
 $userId = $_POST['userId']; // Replace with the actual parameter name
@@ -31,6 +33,6 @@ if ($result && $result->num_rows > 0) {
 }
 
 // Close the database connection
-$stmt->close();
-$conn->close();
+$stmt// PDO connection closes automatically;
+$conn// PDO connection closes automatically;
 ?>

@@ -141,14 +141,16 @@ p {
         <a href="javascript:history.back()" class="back-button">
             <i class="fas fa-arrow-left"></i> Back
         </a> <?php
-                include('connexion.php');
+                require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
                 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     $activityId = $_GET['activity_id'];
 
                     // Fetch activity details based on the provided activity ID
                     $activitySql = "SELECT * FROM activities WHERE id = $activityId";
-                    $activityResult = $conn->query($activitySql);
+                    $stmt = $conn->prepare($activitySql);\n$stmt->execute();\n$activityResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                     if ($activityResult->num_rows > 0) {
                         $activityRow = $activityResult->fetch_assoc();
@@ -175,14 +177,14 @@ p {
                         // Fetch other activities with the same category
                         $category = $activityRow['category'];
                         $otherActivitiesSql = "SELECT * FROM activities WHERE category = '$category' AND id != $activityId LIMIT 4";
-                        $otherActivitiesResult = $conn->query($otherActivitiesSql);
+                        $stmt = $conn->prepare($otherActivitiesSql);\n$stmt->execute();\n$otherActivitiesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                         if ($otherActivitiesResult->num_rows > 0) {
                             echo '<div class="related-activities">';
                             echo '<h3>Related Activities :</h3>';
                             echo '<div class="row">';
 
-                            while ($otherActivityRow = $otherActivitiesResult->fetch_assoc()) {
+                            foreach ($otherActivitiesResult as $otherActivityRow) {
 
                                 echo '<style>';
                                 echo '.activity-card { display: flex; flex-direction: column; height: 100%; max-height: 480px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; cursor: pointer; transition: box-shadow 0.3s ease-in-out; }';

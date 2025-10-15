@@ -2,7 +2,9 @@
 // mark_all_notifications_as_read.php
 
 // Include necessary files and database connection
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 // Get the child ID from the POST data
 $childId = $_POST['childId'];
@@ -17,5 +19,5 @@ if ($result) {
     echo json_encode(['success' => false, 'error' => 'Failed to mark notifications as read']);
 }
 
-$conn->close();
+$conn// PDO connection closes automatically;
 ?>

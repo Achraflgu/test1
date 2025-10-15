@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $category = $_GET['category'];
@@ -47,14 +49,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     $storiesSql = "SELECT * FROM stories $condition";
-    $storiesResult = $conn->query($storiesSql);
+    $stmt = $conn->prepare($storiesSql);\n$stmt->execute();\n$storiesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($storiesResult === false) {
-        die('Error executing query: ' . $conn->error);
+        die('Error executing query: ' . $conn->errorInfo()[2]);
     }
 
     if ($storiesResult->num_rows > 0) {
-        while ($storyRow = $storiesResult->fetch_assoc()) {
+        foreach ($storiesResult as $storyRow) {
 echo '<style>';
 echo '.story-card { display: flex; flex-direction: column; height: 100%; max-height: 480px; }'; // Adjust the height as needed
 echo '.card-img-top { flex: 1; object-fit: cover; }';

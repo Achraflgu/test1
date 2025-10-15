@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if (isset($_GET['gameId'])) {
     $gameId = $_GET['gameId'];
@@ -25,8 +27,8 @@ if (isset($_GET['gameId'])) {
     }
 
     // Close the database connection
-    $stmt->close();
-    $conn->close();
+    $stmt// PDO connection closes automatically;
+    $conn// PDO connection closes automatically;
 } else {
     // Handle the case where the game ID is not provided
     echo json_encode(['error' => 'Game ID not provided']);

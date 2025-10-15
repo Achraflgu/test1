@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if (!isset($_GET['kidId'])) {
     echo "Kid ID is not set!";
@@ -9,19 +11,23 @@ if (!isset($_GET['kidId'])) {
 $selectedKidId = $_GET['kidId'];
 
 $sql = "SELECT * FROM children WHERE id = $selectedKidId";
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if ($result && $result->num_rows > 0) {
-    $row = $result->fetch_assoc();
+if (count($result) > 0) {
+    $row = $result[0];
     $selectedKidName = $row['kid_name'];
     $selectedKidPhoto = $row['kid_photo'];
     $selectedGender = $row['kid_gender'];
 
     $sql1 = "SELECT user_id FROM children WHERE kid_name = '$selectedKidName' AND id = $selectedKidId";
-    $result = $conn->query($sql1);
+    $stmt1 = $conn->prepare($sql1);
+    $stmt1->execute();
+    $result1 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc();
+    if (count($result1) > 0) {
+        $row = $result1[0];
         $selectedUserId = $row['user_id'];
     }
 } else {
@@ -39,11 +45,13 @@ function fetchRandomEntries($conn, $table, $limit = 5, $hiddenCategories = [])
     }
 
     $sql = "SELECT * FROM $table WHERE 1 $whereCondition ORDER BY RAND() LIMIT $limit";
-    $result = $conn->query($sql);
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $entries = [];
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
+    if (count($result) > 0) {
+        foreach ($result as $row) {
             $entries[] = $row;
         }
     }
@@ -53,10 +61,12 @@ function fetchRandomEntries($conn, $table, $limit = 5, $hiddenCategories = [])
 
 // Fetch hidden categories for the selected kid
 $sqlHiddenCategories = "SELECT hidden_games_categories, hidden_stories_categories, hidden_activities_categories FROM children WHERE id = $selectedKidId";
-$resultHiddenCategories = $conn->query($sqlHiddenCategories);
+$stmtHidden = $conn->prepare($sqlHiddenCategories);
+$stmtHidden->execute();
+$resultHiddenCategories = $stmtHidden->fetchAll(PDO::FETCH_ASSOC);
 
-if ($resultHiddenCategories && $resultHiddenCategories->num_rows > 0) {
-    $rowHiddenCategories = $resultHiddenCategories->fetch_assoc();
+if (count($resultHiddenCategories) > 0) {
+    $rowHiddenCategories = $resultHiddenCategories[0];
     $hiddenGamesCategories = explode(',', $rowHiddenCategories['hidden_games_categories']);
     $hiddenStoriesCategories = explode(',', $rowHiddenCategories['hidden_stories_categories']);
     $hiddenActivitiesCategories = explode(',', $rowHiddenCategories['hidden_activities_categories']);

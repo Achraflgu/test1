@@ -2,7 +2,9 @@
 // fetch_unread_notifications.php
 
 // Include necessary files and database connection
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 // Get the child ID from the POST data
 $childId = $_POST['childId'];
@@ -22,5 +24,5 @@ if ($result && $result->num_rows > 0) {
     echo json_encode(['success' => false, 'error' => 'No unread notifications found']);
 }
 
-$conn->close();
+$conn// PDO connection closes automatically;
 ?>

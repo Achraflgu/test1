@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Assuming you have an 'email' and 'password' column in your 'users' table
@@ -28,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $childQuery = $conn->prepare("INSERT INTO children (user_id, kid_gender, kid_name, kid_age) VALUES (?, ?, ?, ?)");
                 $childQuery->bind_param("isss", $userId, $childGender, $childName, $childAge);
                 $childQuery->execute();
-                $childQuery->close();
+                $childQuery// PDO connection closes automatically;
             }
 
             // Update the number_of_kids for the user
@@ -36,15 +38,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $numberOfKids = count($childrenData);
             $updateUserQuery->bind_param("ii", $numberOfKids, $userId);
             $updateUserQuery->execute();
-            $updateUserQuery->close();
+            $updateUserQuery// PDO connection closes automatically;
         }
 
         echo "User added successfully.";
     } else {
-        echo "Error adding user: " . $conn->error;
+        echo "Error adding user: " . $conn->errorInfo()[2];
     }
 
-    $query->close();
-    $conn->close();
+    $query// PDO connection closes automatically;
+    $conn// PDO connection closes automatically;
 }
 ?>

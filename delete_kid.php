@@ -1,7 +1,9 @@
 <?php
 // delete_kid.php
 
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if (!isset($_GET['id'])) {
     echo "Kid ID is not set!";
@@ -29,8 +31,8 @@ if ($conn->query($deleteChildSql) === TRUE) {
     // Redirect the current page
     echo "<script>window.location.href = '{$_SERVER['HTTP_REFERER']}'</script>";
 } else {
-    echo "Error deleting kid: " . $conn->error;
+    echo "Error deleting kid: " . $conn->errorInfo()[2];
 }
 
-$conn->close();
+$conn// PDO connection closes automatically;
 ?>

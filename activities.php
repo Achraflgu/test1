@@ -40,11 +40,15 @@
         </thead>
         <tbody>
             <?php
-            include('connexion.php');
+            require_once('config/database.php');
+            $database = new Database();
+            $conn = $database->getConnection();
             $activitiesSql = "SELECT * FROM activities";
-            $activitiesResult = $conn->query($activitiesSql);
+            $stmt = $conn->prepare($activitiesSql);
+            $stmt->execute();
+            $activitiesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            while ($activityRow = $activitiesResult->fetch_assoc()) {
+            foreach ($activitiesResult as $activityRow) {
                 echo '<tr>';
                 echo '<td>' . $activityRow['id'] . '</td>';
                 echo '<td>' . $activityRow['activity_title'] . '</td>';
@@ -275,11 +279,15 @@
                         <select class="form-select" id="activityCategoryModal" name="newCategory" required>
                             <!-- Fetch categories dynamically from the database -->
                             <?php
-                            include('connexion.php');
+                            require_once('config/database.php');
+            $database = new Database();
+            $conn = $database->getConnection();
                             $categoriesSql = "SELECT DISTINCT category FROM activities";
-                            $categoriesResult = $conn->query($categoriesSql);
+                            $stmt = $conn->prepare($categoriesSql);
+                            $stmt->execute();
+                            $categoriesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                            while ($categoryRow = $categoriesResult->fetch_assoc()) {
+                            foreach ($categoriesResult as $categoryRow) {
                                 echo '<option value="' . $categoryRow['category'] . '">' . $categoryRow['category'] . '</option>';
                             }
                             ?>
@@ -335,11 +343,15 @@
                         <select class="form-select" id="addActivityCategoryModal" name="newCategory" required>
                             <!-- Fetch categories dynamically from the database -->
                             <?php
-                            include('connexion.php');
+                            require_once('config/database.php');
+            $database = new Database();
+            $conn = $database->getConnection();
                             $categoriesSql = "SELECT DISTINCT category FROM activities";
-                            $categoriesResult = $conn->query($categoriesSql);
+                            $stmt = $conn->prepare($categoriesSql);
+                            $stmt->execute();
+                            $categoriesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                            while ($categoryRow = $categoriesResult->fetch_assoc()) {
+                            foreach ($categoriesResult as $categoryRow) {
                                 echo '<option value="' . $categoryRow['category'] . '">' . $categoryRow['category'] . '</option>';
                             }
                             ?>

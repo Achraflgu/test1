@@ -155,14 +155,16 @@ p {
             <i class="fas fa-arrow-left"></i> Back
         </a>
         <?php
-        include('connexion.php');
+        require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $gameId = $_GET['game_id'];
 
             // Fetch current game details based on the provided game ID
             $gameSql = "SELECT * FROM games WHERE id = $gameId";
-            $gameResult = $conn->query($gameSql);
+            $stmt = $conn->prepare($gameSql);\n$stmt->execute();\n$gameResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if ($gameResult->num_rows > 0) {
                 $gameRow = $gameResult->fetch_assoc();
@@ -189,14 +191,14 @@ p {
                 // Fetch other games with the same category
                 $category = $gameRow['category'];
                 $otherGamesSql = "SELECT * FROM games WHERE category = '$category' AND id != $gameId LIMIT 4";
-                $otherGamesResult = $conn->query($otherGamesSql);
+                $stmt = $conn->prepare($otherGamesSql);\n$stmt->execute();\n$otherGamesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 if ($otherGamesResult->num_rows > 0) {
                     echo '<div class="more-games">';
                     echo '<h3>More Games :</h3>';
                     echo '<div class="row">';
 
-                    while ($otherGameRow = $otherGamesResult->fetch_assoc()) {
+                    foreach ($otherGamesResult as $otherGameRow) {
 
                         echo '<style>';
                         echo '.game-card { display: flex; flex-direction: column; height: 100%; max-height: 480px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; cursor: pointer; transition: box-shadow 0.3s ease-in-out; }';

@@ -1,7 +1,9 @@
 <?php
 // delete_activity.php
 
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $activityId = $_POST['activityId'];

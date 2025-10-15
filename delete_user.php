@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupérer l'ID de l'utilisateur à supprimer
@@ -16,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo 'User deleted successfully';
     } else {
         // Log any erreurs to the server logs
-        error_log('Error deleting user: ' . $conn->error);
-        echo 'Error deleting user: ' . $conn->error;
+        error_log('Error deleting user: ' . $conn->errorInfo()[2]);
+        echo 'Error deleting user: ' . $conn->errorInfo()[2];
     }
 }
 ?>

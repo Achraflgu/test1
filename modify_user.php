@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupérer les données du formulaire
@@ -16,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo 'User updated successfully';
     } else {
         // Log any errors to the server logs
-        error_log('Error updating user: ' . $conn->error);
-        echo 'Error updating user: ' . $conn->error;
+        error_log('Error updating user: ' . $conn->errorInfo()[2]);
+        echo 'Error updating user: ' . $conn->errorInfo()[2];
     }
 }
 ?>

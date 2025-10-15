@@ -1,7 +1,9 @@
 
 <?php
 // Include the database connection file
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 // Initialize variables
 $userEmail = "";
@@ -24,7 +26,7 @@ if (isset($_GET['userId'])) {
     }
     
     // Close the statement
-    $stmt->close();
+    $stmt// PDO connection closes automatically;
 }
 ?>
 <!DOCTYPE html>
@@ -363,7 +365,9 @@ if (isset($_GET['userId'])) {
 
 <?php
 // Include the database connection file
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve form data
@@ -385,16 +389,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt->execute()) {
         echo '<script>showNotification("Feedback submitted successfully", "success");</script>';
     } else {
-        echo '<script>showNotification("Error: ' . $stmt->error . '", "danger");</script>';
-        error_log("Error: " . $stmt->error);
+        echo '<script>showNotification("Error: ' . $stmt->errorInfo()[2] . '", "danger");</script>';
+        error_log("Error: " . $stmt->errorInfo()[2]);
     }
 
     // Close the statement
-    $stmt->close();
+    $stmt// PDO connection closes automatically;
 }
 
 // Close the database connection
-$conn->close();
+$conn// PDO connection closes automatically;
 ?>
 </html>
 

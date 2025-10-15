@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $category = $_GET['category'];
@@ -49,15 +51,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     $gamesSql = "SELECT * FROM games $condition";
-    $gamesResult = $conn->query($gamesSql);
+    $stmt = $conn->prepare($gamesSql);\n$stmt->execute();\n$gamesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($gamesResult === false) {
         // Handle the SQL error
-        die('Error executing query: ' . $conn->error);
+        die('Error executing query: ' . $conn->errorInfo()[2]);
     }
 
     if ($gamesResult->num_rows > 0) {
-        while ($gameRow = $gamesResult->fetch_assoc()) {
+        foreach ($gamesResult as $gameRow) {
            
             echo '<style>';
             echo '.game-card { display: flex; flex-direction: column; height: 100%; max-height: 480px; }'; // Adjust the height as needed

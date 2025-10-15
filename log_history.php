@@ -22,9 +22,9 @@ $sql = "INSERT INTO historic_data (kid_id, date_time, page_name) VALUES ('$selec
 // Check for errors in the query execution
 if ($conn->query($sql)) {
 } else {
-    echo "Error logging historical data: " . $conn->error;
+    echo "Error logging historical data: " . $conn->errorInfo()[2];
 }
 
 // Close the database connection
-$conn->close();
+$conn// PDO connection closes automatically;
 ?>

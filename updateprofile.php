@@ -2,7 +2,9 @@
 // updateprofile.php
 
 // Include your database connection
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 // Assuming you have the user's selected kid ID passed as URL parameter
 $selectedKidId = $_POST['kidId']; // Use $_POST instead of $_GET for security
@@ -34,7 +36,7 @@ if ($result && $result->num_rows > 0) {
         if ($conn->query($updateSql) === TRUE) {
             echo "Kid information updated successfully!";
         } else {
-            echo "Error updating kid information: " . $conn->error;
+            echo "Error updating kid information: " . $conn->errorInfo()[2];
         }
     } else {
         echo "Password is incorrect!";
@@ -45,5 +47,5 @@ if ($result && $result->num_rows > 0) {
 }
 
 // Close the database connection
-$conn->close();
+$conn// PDO connection closes automatically;
 ?>

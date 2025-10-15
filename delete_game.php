@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $gameId = $_POST['gameId'];
@@ -12,15 +14,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($deleteStmt->execute()) {
         echo json_encode(['success' => true, 'message' => 'Game deleted successfully']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Error deleting game: ' . $conn->error]);
+        echo json_encode(['success' => false, 'message' => 'Error deleting game: ' . $conn->errorInfo()[2]]);
     }
 
     // Close the prepared statement
-    $deleteStmt->close();
+    $deleteStmt// PDO connection closes automatically;
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 }
 
 // Close the database connection
-$conn->close();
+$conn// PDO connection closes automatically;
 ?>

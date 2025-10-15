@@ -2,7 +2,9 @@
 // accountSetting.php
 
 // Include your database connection
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 // Ensure userId is set
 if (!isset($_GET['userId'])) {
@@ -17,7 +19,7 @@ $selectedUserId = $_GET['userId']; // Get the user's ID from the URL
 $sql = "SELECT * FROM users WHERE id = $selectedUserId";
 $result = $conn->query($sql);
 $kidsSql = "SELECT * FROM children WHERE user_id = $selectedUserId";
-$kidsResult = $conn->query($kidsSql);
+$stmt = $conn->prepare($kidsSql);\n$stmt->execute();\n$kidsResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if ($result && $result->num_rows > 0) {
     $row = $result->fetch_assoc();
@@ -43,7 +45,7 @@ if ($result && $result->num_rows > 0) {
                     $alertMessage = "Password updated successfully!";
                     $alertClass = "alert-success";
                 } else {
-                    $alertMessage = "Error updating password: " . $conn->error;
+                    $alertMessage = "Error updating password: " . $conn->errorInfo()[2];
                     $alertClass = "alert-danger";
                 }
             }
@@ -341,7 +343,7 @@ if ($result && $result->num_rows > 0) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    while ($kidRow = $kidsResult->fetch_assoc()) {
+                                    foreach ($kidsResult as $kidRow) {
                                         echo "<tr>";
                                         echo "<td>" . $kidRow["id"] . "</td>";
                                         echo "<td>" . $kidRow["kid_name"] . "</td>";

@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $category = $_GET['category'];
@@ -49,15 +51,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     $activitiesSql = "SELECT * FROM activities $condition";
-    $activitiesResult = $conn->query($activitiesSql);
+    $stmt = $conn->prepare($activitiesSql);\n$stmt->execute();\n$activitiesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($activitiesResult === false) {
         // Handle the SQL error
-        die('Error executing query: ' . $conn->error);
+        die('Error executing query: ' . $conn->errorInfo()[2]);
     }
 
     if ($activitiesResult->num_rows > 0) {
-        while ($activityRow = $activitiesResult->fetch_assoc()) {
+        foreach ($activitiesResult as $activityRow) {
            
             echo '<style>';
 echo '.activity-card { display: flex; flex-direction: column; height: 100%; max-height: 480px; }'; // Adjust the height as needed

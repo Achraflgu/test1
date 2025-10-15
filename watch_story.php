@@ -135,14 +135,16 @@
             <i class="fas fa-arrow-left"></i> Back
         </a>
         <?php
-        include('connexion.php');
+        require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $storyId = $_GET['story_id'];
 
             // Fetch story details based on the provided story ID
             $storySql = "SELECT * FROM stories WHERE id = $storyId";
-            $storyResult = $conn->query($storySql);
+            $stmt = $conn->prepare($storySql);\n$stmt->execute();\n$storyResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if ($storyResult->num_rows > 0) {
                 $storyRow = $storyResult->fetch_assoc();
@@ -172,14 +174,14 @@
                 // Fetch other stories with the same category
                 $category = $storyRow['category'];
                 $otherStoriesSql = "SELECT * FROM stories WHERE category = '$category' AND id != $storyId LIMIT 4";
-                $otherStoriesResult = $conn->query($otherStoriesSql);
+                $stmt = $conn->prepare($otherStoriesSql);\n$stmt->execute();\n$otherStoriesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 if ($otherStoriesResult->num_rows > 0) {
                     echo '<div class="related-stories">';
                     echo '<h3>Related Stories :</h3>';
                     echo '<div class="row">';
 
-                    while ($otherStoryRow = $otherStoriesResult->fetch_assoc()) {
+                    foreach ($otherStoriesResult as $otherStoryRow) {
 
                         echo '<style>';
                         echo '.story-card { display: flex; flex-direction: column; height: 100%; max-height: 480px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; cursor: pointer; transition: box-shadow 0.3s ease-in-out; }';

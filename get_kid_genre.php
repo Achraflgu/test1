@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 // Check if kidId is set
 if (!isset($_GET['kidId'])) {
@@ -35,6 +37,6 @@ if ($result && $result->num_rows > 0) {
 }
 
 // Close the statement and the database connection
-$stmt->close();
-$conn->close();
+$stmt// PDO connection closes automatically;
+$conn// PDO connection closes automatically;
 ?>

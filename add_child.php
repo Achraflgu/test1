@@ -1,6 +1,8 @@
 <?php
 // Include the database connection file
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -24,26 +26,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $countChildrenQuery->execute();
         $countChildrenQuery->bind_result($numberOfKids);
         $countChildrenQuery->fetch();
-        $countChildrenQuery->close();
+        $countChildrenQuery// PDO connection closes automatically;
 
         // Update the number_of_kids for the user
         $updateUserQuery = $conn->prepare("UPDATE users SET number_of_kids = ? WHERE id = ?");
         $updateUserQuery->bind_param("ii", $numberOfKids, $childUserId);
         $updateUserQuery->execute();
-        $updateUserQuery->close();
+        $updateUserQuery// PDO connection closes automatically;
 
         if ($stmt->execute()) {
             // Child added successfully
             echo "Child added successfully!";
         } else {
             // Error adding child
-            echo "Error adding child: " . $stmt->error;
+            echo "Error adding child: " . $stmt->errorInfo()[2];
         }
 
-        $stmt->close();
+        $stmt// PDO connection closes automatically;
     }
 }
 
 // Close the database connection
-$conn->close();
+$conn// PDO connection closes automatically;
 ?>

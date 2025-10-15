@@ -1,5 +1,7 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newTitle = $_POST['newTitle'];
@@ -15,11 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($conn->query($insertSql) === TRUE) {
         echo json_encode(['success' => true, 'message' => 'Story added successfully']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Error adding story: ' . $conn->error]);
+        echo json_encode(['success' => false, 'message' => 'Error adding story: ' . $conn->errorInfo()[2]]);
     }
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 }
 
-$conn->close();
+$conn// PDO connection closes automatically;
 ?>

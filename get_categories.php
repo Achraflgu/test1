@@ -1,14 +1,16 @@
 <?php
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 // Fetch unique categories from the stories table
 $categoriesSql = "SELECT DISTINCT category FROM stories";
-$categoriesResult = $conn->query($categoriesSql);
+$stmt = $conn->prepare($categoriesSql);\n$stmt->execute();\n$categoriesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $categories = array();
 
 if ($categoriesResult->num_rows > 0) {
-    while ($row = $categoriesResult->fetch_assoc()) {
+    foreach ($categoriesResult as $row) {
         $categories[] = $row['category'];
     }
 }

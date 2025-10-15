@@ -35,7 +35,9 @@
             <tbody>
                 <?php
                 // Replace these with your database connection details
-                include('connexion.php');
+                require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
                 // Fetch feedback data
                 $sql = "SELECT * FROM feedback";
@@ -62,7 +64,7 @@
                 }
 
                 // Close connection
-                $conn->close();
+                $conn// PDO connection closes automatically;
                 ?>
             </tbody>
         </table>

@@ -1,6 +1,8 @@
 <?php
 // Include the database connection file
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 // Check if the activity ID is provided
 if (isset($_GET['activityId'])) {
@@ -27,8 +29,8 @@ if (isset($_GET['activityId'])) {
     }
 
     // Close the database connection
-    $stmt->close();
-    $conn->close();
+    $stmt// PDO connection closes automatically;
+    $conn// PDO connection closes automatically;
 } else {
     // Handle the case where the activity ID is not provided
     echo json_encode(['error' => 'Activity ID not provided']);

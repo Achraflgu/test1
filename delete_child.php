@@ -1,7 +1,9 @@
 <?php
 // delete_child.php
 
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the child ID from the POST data
@@ -9,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Get the user ID associated with the child
     $getUserSql = "SELECT user_id FROM children WHERE id = $childId";
-    $userResult = $conn->query($getUserSql);
+    $stmt = $conn->prepare($getUserSql);\n$stmt->execute();\n$userResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($userResult && $userResult->num_rows > 0) {
         $userData = $userResult->fetch_assoc();
@@ -25,13 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($conn->query($updateUserSql)) {
                 echo "Child deleted successfully";
             } else {
-                echo "Error updating number_of_kids for user: " . $conn->error;
+                echo "Error updating number_of_kids for user: " . $conn->errorInfo()[2];
             }
         } else {
-            echo "Error deleting child: " . $conn->error;
+            echo "Error deleting child: " . $conn->errorInfo()[2];
         }
     } else {
-        echo "Error fetching user information: " . $conn->error;
+        echo "Error fetching user information: " . $conn->errorInfo()[2];
     }
 } else {
     echo "Invalid request method";

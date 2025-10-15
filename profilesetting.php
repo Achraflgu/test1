@@ -2,7 +2,9 @@
 // profilesetting.php
 
 // Include your database connection
-include('connexion.php');
+require_once('config/database.php');
+$database = new Database();
+$conn = $database->getConnection();
 
 // Check if kidId is set in the URL
 if (isset($_GET['kidId'])) {
@@ -54,13 +56,13 @@ if (isset($_GET['kidId'])) {
     
         // Execute the query only if $updateSql is defined
         if ($updateSql !== "") {
-            $updateResult = $conn->query($updateSql);
+            $stmt = $conn->prepare($updateSql);\n$stmt->execute();\n$updateResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
             if ($updateResult) {
                 header("refresh:1;url=profilesetting.php?kidId=$selectedKidId");
                 $alertMessage = '<div class="alert alert-success" role="alert">Profile updated successfully!</div>';
             } else {
-                $alertMessage = '<div class="alert alert-danger" role="alert">Error updating profile: ' . $conn->error . '</div>';
+                $alertMessage = '<div class="alert alert-danger" role="alert">Error updating profile: ' . $conn->errorInfo()[2] . '</div>';
             }
         }}
 
@@ -491,7 +493,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveCategories'])) { 
                                                 hidden_activities_categories = '$hiddenActivities' 
                                   WHERE id = $selectedKidId";
 
-    $updateHiddenCategoriesResult = $conn->query($updateHiddenCategoriesSql);
+    $stmt = $conn->prepare($updateHiddenCategoriesSql);\n$stmt->execute();\n$updateHiddenCategoriesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($updateHiddenCategoriesResult) {
         $alertMessageCategories = '<div class="alert alert-success" role="alert">Hidden categories updated successfully!</div>';
@@ -501,7 +503,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveCategories'])) { 
                 }, 1000);
               </script>';
     } else {
-        $alertMessageCategories = '<div class="alert alert-danger" role="alert">Error updating hidden categories: ' . $conn->error . '</div>';
+        $alertMessageCategories = '<div class="alert alert-danger" role="alert">Error updating hidden categories: ' . $conn->errorInfo()[2] . '</div>';
     }
 }}
 ?>
@@ -605,7 +607,7 @@ function displayCategoryCheckboxes($conn, $categoryType, $selectedKidId)
 
         $hiddenCategories = getHiddenCategories($conn, $selectedKidId, $hiddenColumnName);
 
-        while ($row = $categoriesResult->fetch_assoc()) {
+        foreach ($categoriesResult as $row) {
             echo '<li class="list-group-item">';
             echo '<input type="checkbox" class="form-check-checkbox m-1" name="hidden' . $categoryType . '[]" value="' . $row['category'] . '" ' .
                 (in_array($row['category'], $hiddenCategories) ? 'checked' : '') . '>';

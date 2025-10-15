@@ -162,11 +162,11 @@ p {
             $gameId = $_GET['game_id'];
 
             // Fetch current game details based on the provided game ID
-            $gameSql = "SELECT * FROM games WHERE id = 0";
-            $stmt = $conn->prepare($gameSql);\nsimpleExecute($sql);\n$gameResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $gameSql = "SELECT * FROM games WHERE id = " . intval($gameId);
+            $gameResult = simpleQuery($gameSql);
 
-            if ($gameResult->num_rows > 0) {
-                $gameRow = $gameResult->fetch_assoc();
+            if (count($gameResult) > 0) {
+                $gameRow = $gameResult[0];
 
                 echo '<h2 class="text-center">' . $gameRow['game_title'] . '</h2>';
                 echo '<p class="text-center">' . $gameRow['description'] . '</p>';

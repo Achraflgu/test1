@@ -17,10 +17,8 @@ if (count($result) > 0) {
     $selectedKidPhoto = $row['kid_photo'];
     $selectedGender = $row['kid_gender'];
 
-    $sql1 = "SELECT user_id FROM children WHERE kid_name = '$selectedKidName' AND id = $selectedKidId";
-    $stmt1 = $conn->prepare($sql1);
-    $stmt1->execute();
-    $result1 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+    $sql1 = "SELECT user_id FROM children WHERE kid_name = '" . addslashes($selectedKidName) . "' AND id = " . intval($selectedKidId);
+    $result1 = simpleQuery($sql1);
 
     if (count($result1) > 0) {
         $row = $result1[0];

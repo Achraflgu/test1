@@ -17,16 +17,13 @@ $pageNumber = isset($_GET['page']) ? intval($_GET['page']) : 1;
 // Calculate the offset for the SQL query
 $offset = ($pageNumber - 1) * $recordsPerPage;
 
-// Fetch historic data based on the kid ID using prepared statements with pagination
-$sql = "SELECT *, TIMEDIFF(LEAD(date_time) OVER (PARTITION BY kid_id ORDER BY date_time), date_time) AS time_spent FROM historic_data WHERE kid_id = ? ORDER BY date_time DESC LIMIT ?, ?";
-$stmt = $conn->prepare($sql);
-
-simpleExecute($sql);
-$result = $stmt->get_result();
+// Fetch historic data based on the kid ID with pagination
+$sql = "SELECT *, EXTRACT(EPOCH FROM (LEAD(date_time) OVER (PARTITION BY kid_id ORDER BY date_time) - date_time)) AS time_spent FROM historic_data WHERE kid_id = " . intval($selectedKidId) . " ORDER BY date_time DESC LIMIT 50";
+$result = simpleQuery($sql);
 
 // Check for errors in the query execution
-if (!$result) {
-    die("Error in SQL query: " . $conn->errorInfo()[2]);
+if ($result === false) {
+    die("Error in SQL query");
 }
 
 // Start HTML output

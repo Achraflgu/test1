@@ -148,11 +148,11 @@ p {
                     $activityId = $_GET['activity_id'];
 
                     // Fetch activity details based on the provided activity ID
-                    $activitySql = "SELECT * FROM activities WHERE id = 0";
-                    $stmt = $conn->prepare($activitySql);\nsimpleExecute($sql);\n$activityResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $activitySql = "SELECT * FROM activities WHERE id = " . intval($activityId);
+                    $activityResult = simpleQuery($activitySql);
 
-                    if ($activityResult->num_rows > 0) {
-                        $activityRow = $activityResult->fetch_assoc();
+                    if (count($activityResult) > 0) {
+                        $activityRow = $activityResult[0];
 
                         echo '<h2>' . $activityRow['activity_title'] . '</h2>';
                         echo '<p>' . $activityRow['description'] . '</p>';

@@ -18,7 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         if ($resultHiddenCategories && count($resultHiddenCategories) > 0) {
             $rowHiddenCategories = $resultHiddenCategories[0];
-            $hiddenCategories = explode(',', $rowHiddenCategories['hidden_stories_categories']);
+            $hiddenCategoriesString = $rowHiddenCategories['hidden_stories_categories'] ?? '';
+            $hiddenCategories = !empty($hiddenCategoriesString) ? explode(',', $hiddenCategoriesString) : [];
         }
 
         // Only include the category if it's not hidden
@@ -39,7 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         if (count($resultAllHiddenCategories) > 0) {
             $rowAllHiddenCategories = $resultAllHiddenCategories[0];
-            $allHiddenCategories = explode(',', $rowAllHiddenCategories['hidden_stories_categories']);
+            $hiddenCategoriesString = $rowAllHiddenCategories['hidden_stories_categories'] ?? '';
+            $allHiddenCategories = !empty($hiddenCategoriesString) ? explode(',', $hiddenCategoriesString) : [];
         }
 
         if (!empty($allHiddenCategories)) {

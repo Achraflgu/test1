@@ -35,13 +35,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if ($category === 'all') {
         // Fetch all hidden categories for the selected kid
         $sqlAllHiddenCategories = "SELECT hidden_activities_categories FROM children WHERE id = " . intval($kidId);
-        $resultAllHiddenCategories = $result = simpleQuery($sqlAllHiddenCategories);
+        $resultAllHiddenCategories = simpleQuery($sqlAllHiddenCategories);
 
         $allHiddenCategories = [];
 
-        if (count($result) > 0) {
-            $rowAllHiddenCategories = $result[0];
-            $allHiddenCategories = explode(',', $rowAllHiddenCategories['hidden_activities_categories']);
+        if (count($resultAllHiddenCategories) > 0) {
+            $rowAllHiddenCategories = $resultAllHiddenCategories[0];
+            $hiddenCategoriesString = $rowAllHiddenCategories['hidden_activities_categories'] ?? '';
+            $allHiddenCategories = !empty($hiddenCategoriesString) ? explode(',', $hiddenCategoriesString) : [];
         }
 
         if (!empty($allHiddenCategories)) {

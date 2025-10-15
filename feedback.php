@@ -392,12 +392,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         error_log("Error: " . $stmt->errorInfo()[2]);
     }
 
-    // Close the statement
-    $stmt// PDO connection closes automatically;
+    // PDO connection closes automatically
 }
 
-// Close the database connection
-$conn// PDO connection closes automatically;
+// PDO connection closes automatically
 ?>
 </html>
 

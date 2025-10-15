@@ -492,7 +492,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveCategories'])) { 
                                                 hidden_activities_categories = '$hiddenActivities' 
                                   WHERE id = $selectedKidId";
 
-    $stmt = $conn->prepare($updateHiddenCategoriesSql);\nsimpleExecute($sql);\n$updateHiddenCategoriesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $updateHiddenCategoriesResult = simpleExecute($updateHiddenCategoriesSql);
 
     if ($updateHiddenCategoriesResult) {
         $alertMessageCategories = '<div class="alert alert-success" role="alert">Hidden categories updated successfully!</div>';

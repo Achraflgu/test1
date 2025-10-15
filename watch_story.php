@@ -172,10 +172,10 @@
 
                 // Fetch other stories with the same category
                 $category = $storyRow['category'];
-                $otherStoriesSql = "SELECT * FROM stories WHERE category = '$category' AND id != $storyId LIMIT 4";
-                $stmt = $conn->prepare($otherStoriesSql);\nsimpleExecute($sql);\n$otherStoriesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $otherStoriesSql = "SELECT * FROM stories WHERE category = '" . addslashes($category) . "' AND id != " . intval($storyId) . " LIMIT 4";
+                $otherStoriesResult = simpleQuery($otherStoriesSql);
 
-                if ($otherStoriesResult->num_rows > 0) {
+                if (count($otherStoriesResult) > 0) {
                     echo '<div class="related-stories">';
                     echo '<h3>Related Stories :</h3>';
                     echo '<div class="row">';

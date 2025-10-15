@@ -189,10 +189,10 @@ p {
 
                 // Fetch other games with the same category
                 $category = $gameRow['category'];
-                $otherGamesSql = "SELECT * FROM games WHERE category = '$category' AND id != $gameId LIMIT 4";
-                $stmt = $conn->prepare($otherGamesSql);\nsimpleExecute($sql);\n$otherGamesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $otherGamesSql = "SELECT * FROM games WHERE category = '" . addslashes($category) . "' AND id != " . intval($gameId) . " LIMIT 4";
+                $otherGamesResult = simpleQuery($otherGamesSql);
 
-                if ($otherGamesResult->num_rows > 0) {
+                if (count($otherGamesResult) > 0) {
                     echo '<div class="more-games">';
                     echo '<h3>More Games :</h3>';
                     echo '<div class="row">';

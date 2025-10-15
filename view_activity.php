@@ -175,10 +175,10 @@ p {
 
                         // Fetch other activities with the same category
                         $category = $activityRow['category'];
-                        $otherActivitiesSql = "SELECT * FROM activities WHERE category = '$category' AND id != $activityId LIMIT 4";
-                        $stmt = $conn->prepare($otherActivitiesSql);\nsimpleExecute($sql);\n$otherActivitiesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $otherActivitiesSql = "SELECT * FROM activities WHERE category = '" . addslashes($category) . "' AND id != " . intval($activityId) . " LIMIT 4";
+                        $otherActivitiesResult = simpleQuery($otherActivitiesSql);
 
-                        if ($otherActivitiesResult->num_rows > 0) {
+                        if (count($otherActivitiesResult) > 0) {
                             echo '<div class="related-activities">';
                             echo '<h3>Related Activities :</h3>';
                             echo '<div class="row">';

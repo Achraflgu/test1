@@ -13,16 +13,13 @@ if (isset($_GET['userId'])) {
     $selectedUserId = $_GET['userId'];
 
     // Fetch user's email using the user ID
-    $getUserEmailSql = "SELECT email FROM users WHERE id = ?";
+    $getUserEmailSql = "SELECT email FROM users WHERE id = " . intval($selectedUserId);
     
-    // Use prepared statement to prevent SQL injection
-    $stmt = $conn->prepare($getUserEmailSql);
-    $stmt->bind_param("i", $selectedUserId);
+    // Get user email using simple query
+    $userResult = simpleQuery($getUserEmailSql);
     
-    // Check if the query is executed successfully
-    if ($stmt->execute()) {
-        $stmt->bind_result($userEmail);
-        $stmt->fetch();
+    if ($userResult && count($userResult) > 0) {
+        $userEmail = $userResult[0]['email'];
     }
     
     // PDO connection closes automatically

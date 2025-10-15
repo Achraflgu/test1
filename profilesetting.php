@@ -444,7 +444,7 @@ if (isset($_GET['kidId'])) {
                         <i class="bi bi-book category-icon"></i> Stories
                     </td>
                     <td class="toggle-cell">
-                        <?php displayCategoryCheckboxes($conn, 'stories', $selectedKidId, 'hiddenstories'); ?>
+                        <?php displayCategoryCheckboxes('stories', $selectedKidId); ?>
                     </td>
                 </tr>
                 <tr>
@@ -452,7 +452,7 @@ if (isset($_GET['kidId'])) {
                         <i class="bi bi-controller category-icon"></i> Games
                     </td>
                     <td class="toggle-cell">
-                        <?php displayCategoryCheckboxes($conn, 'games', $selectedKidId, 'hiddengames'); ?>
+                        <?php displayCategoryCheckboxes('games', $selectedKidId); ?>
                     </td>
                 </tr>
                 <tr>
@@ -460,7 +460,7 @@ if (isset($_GET['kidId'])) {
                         <i class="bi bi-trophy category-icon"></i> Activities
                     </td>
                     <td class="toggle-cell">
-                        <?php displayCategoryCheckboxes($conn, 'activities', $selectedKidId, 'hiddenactivities'); ?>
+                        <?php displayCategoryCheckboxes('activities', $selectedKidId); ?>
                     </td>
                 </tr>
             </tbody>
@@ -580,7 +580,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveCategories'])) { 
 }
 
 // Function to display checkboxes for a category type
-function displayCategoryCheckboxes($conn, $categoryType, $selectedKidId)
+function displayCategoryCheckboxes($categoryType, $selectedKidId)
 {
     echo '<div>';
     echo '<div class="category-title">';
@@ -589,22 +589,10 @@ function displayCategoryCheckboxes($conn, $categoryType, $selectedKidId)
     // Adjust the query based on the correct column name for hidden categories
     $hiddenColumnName = "hidden_{$categoryType}_categories";
 
-    // Check if the column exists before querying
-    $columns = $conn->query("SHOW COLUMNS FROM children");
+    // Get categories from the table
+    $categoriesResult = simpleQuery("SELECT DISTINCT category FROM {$categoryType}");
 
-    $columnExists = false;
-
-    while ($column = $columns->fetch_assoc()) {
-        if ($column['Field'] === $hiddenColumnName) {
-            $columnExists = true;
-            break;
-        }
-    }
-
-    if ($columnExists) {
-        $categoriesResult = $conn->query("SELECT DISTINCT category FROM {$categoryType}");
-
-        $hiddenCategories = getHiddenCategories($conn, $selectedKidId, $hiddenColumnName);
+    $hiddenCategories = getHiddenCategories($selectedKidId, $hiddenColumnName);
 
         foreach ($categoriesResult as $row) {
             echo '<li class="list-group-item">';
@@ -621,13 +609,14 @@ function displayCategoryCheckboxes($conn, $categoryType, $selectedKidId)
 }
 
 // Function to get hidden categories from the database
-function getHiddenCategories($conn, $selectedKidId, $hiddenColumnName)
+function getHiddenCategories($selectedKidId, $hiddenColumnName)
 {
-    $result = simpleQuery("SELECT {$hiddenColumnName} FROM children WHERE id = $selectedKidId");
+    $result = simpleQuery("SELECT {$hiddenColumnName} FROM children WHERE id = " . intval($selectedKidId));
 
     if ($result && count($result) > 0) {
         $row = $result[0];
-        $hiddenCategories = explode(',', $row[$hiddenColumnName]);
+        $hiddenCategoriesString = $row[$hiddenColumnName] ?? '';
+        $hiddenCategories = !empty($hiddenCategoriesString) ? explode(',', $hiddenCategoriesString) : [];
         return array_filter($hiddenCategories);
     }
 

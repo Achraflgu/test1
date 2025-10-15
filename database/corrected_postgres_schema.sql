@@ -117,6 +117,15 @@ INSERT INTO stories (story_title, description, photo, link_of_stories, category)
 ('Goldilocks and the Three Bears', 'A classic fairy tale', 'images/goldilocks.jpg', 'stories/goldilocks.html', 'fairy_tales'),
 ('The Three Little Pigs', 'A story about building houses', 'images/three_pigs.jpg', 'stories/three_pigs.html', 'animals');
 
+-- Create historic_data table for tracking user activity
+CREATE TABLE IF NOT EXISTS historic_data (
+    id SERIAL PRIMARY KEY,
+    kid_id INTEGER NOT NULL,
+    date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    page_name VARCHAR(255),
+    FOREIGN KEY (kid_id) REFERENCES children(id) ON DELETE CASCADE
+);
+
 -- Create indexes for better performance
 CREATE INDEX idx_children_user_id ON children(user_id);
 CREATE INDEX idx_activities_category ON activities(category);
@@ -124,3 +133,5 @@ CREATE INDEX idx_games_category ON games(category);
 CREATE INDEX idx_stories_category ON stories(category);
 CREATE INDEX idx_feedback_user_id ON feedback(user_id);
 CREATE INDEX idx_notifications_user_id ON notifications(user_id);
+CREATE INDEX idx_historic_data_kid_id ON historic_data(kid_id);
+CREATE INDEX idx_historic_data_date_time ON historic_data(date_time);

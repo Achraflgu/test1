@@ -29,7 +29,7 @@ if (count($result) > 0) {
     exit();
 }
 
-function fetchRandomEntries($conn, $table, $limit = 5, $hiddenCategories = [])
+function fetchRandomEntries($table, $limit = 5, $hiddenCategories = [])
 {
     // Create a WHERE condition to exclude hidden categories
     $whereCondition = '';
@@ -38,10 +38,8 @@ function fetchRandomEntries($conn, $table, $limit = 5, $hiddenCategories = [])
         $whereCondition = "AND category NOT IN ('$hiddenCategoriesString')";
     }
 
-    $sql = "SELECT * FROM $table WHERE 1 $whereCondition ORDER BY RAND() LIMIT $limit";
-    $stmt = $conn->prepare($sql);
-    simpleExecute($sql);
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $sql = "SELECT * FROM $table WHERE 1 $whereCondition ORDER BY RANDOM() LIMIT $limit";
+    $result = simpleQuery($sql);
 
     $entries = [];
     if (count($result) > 0) {
@@ -54,25 +52,27 @@ function fetchRandomEntries($conn, $table, $limit = 5, $hiddenCategories = [])
 }
 
 // Fetch hidden categories for the selected kid
-$sqlHiddenCategories = "SELECT hidden_games_categories, hidden_stories_categories, hidden_activities_categories FROM children WHERE id = $selectedKidId";
-$stmtHidden = $conn->prepare($sqlHiddenCategories);
-$stmtHidden->execute();
-$resultHiddenCategories = $stmtHidden->fetchAll(PDO::FETCH_ASSOC);
+$sqlHiddenCategories = "SELECT hidden_games_categories, hidden_stories_categories, hidden_activities_categories FROM children WHERE id = " . intval($selectedKidId);
+$resultHiddenCategories = simpleQuery($sqlHiddenCategories);
 
 if (count($resultHiddenCategories) > 0) {
     $rowHiddenCategories = $resultHiddenCategories[0];
-    $hiddenGamesCategories = explode(',', $rowHiddenCategories['hidden_games_categories']);
-    $hiddenStoriesCategories = explode(',', $rowHiddenCategories['hidden_stories_categories']);
-    $hiddenActivitiesCategories = explode(',', $rowHiddenCategories['hidden_activities_categories']);
+    $hiddenGamesString = $rowHiddenCategories['hidden_games_categories'] ?? '';
+    $hiddenStoriesString = $rowHiddenCategories['hidden_stories_categories'] ?? '';
+    $hiddenActivitiesString = $rowHiddenCategories['hidden_activities_categories'] ?? '';
+    
+    $hiddenGamesCategories = !empty($hiddenGamesString) ? explode(',', $hiddenGamesString) : [];
+    $hiddenStoriesCategories = !empty($hiddenStoriesString) ? explode(',', $hiddenStoriesString) : [];
+    $hiddenActivitiesCategories = !empty($hiddenActivitiesString) ? explode(',', $hiddenActivitiesString) : [];
 } else {
     $hiddenGamesCategories = [];
     $hiddenStoriesCategories = [];
     $hiddenActivitiesCategories = [];
 }
 
-$randomGames = fetchRandomEntries($conn, 'games', 5, $hiddenGamesCategories);
-$randomStories = fetchRandomEntries($conn, 'stories', 5, $hiddenStoriesCategories);
-$randomActivities = fetchRandomEntries($conn, 'activities', 5, $hiddenActivitiesCategories);
+$randomGames = fetchRandomEntries('games', 5, $hiddenGamesCategories);
+$randomStories = fetchRandomEntries('stories', 5, $hiddenStoriesCategories);
+$randomActivities = fetchRandomEntries('activities', 5, $hiddenActivitiesCategories);
 ?>
 
 <!DOCTYPE html>

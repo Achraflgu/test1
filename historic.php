@@ -276,10 +276,7 @@ h2 {
         <?php
     }
 
-    // Close the database connections
-    $stmt// PDO connection closes automatically;
-    $stmtCount// PDO connection closes automatically;
-    $conn// PDO connection closes automatically;
+    // PDO connection closes automatically
     ?>
 </div>
 

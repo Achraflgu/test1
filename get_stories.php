@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // If the category is not 'all', fetch stories only for the selected category
     if ($category !== 'all') {
         $sqlHiddenCategories = "SELECT hidden_stories_categories FROM children WHERE id = " . intval($kidId);
-        $resultHiddenCategories = $result = simpleQuery($sqlHiddenCategories);
+        $resultHiddenCategories = simpleQuery($sqlHiddenCategories);
 
         $hiddenCategories = [];
 
@@ -32,13 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     // If the category is 'all', exclude stories with hidden categories
     if ($category === 'all') {
-        $sqlAllHiddenCategories = "SELECT hidden_stories_categories FROM children WHERE id = 0";
-        $resultAllHiddenCategories = $result = simpleQuery($sqlAllHiddenCategories);
+        $sqlAllHiddenCategories = "SELECT hidden_stories_categories FROM children WHERE id = " . intval($kidId);
+        $resultAllHiddenCategories = simpleQuery($sqlAllHiddenCategories);
 
         $allHiddenCategories = [];
 
-        if (count($result) > 0) {
-            $rowAllHiddenCategories = $result[0];
+        if (count($resultAllHiddenCategories) > 0) {
+            $rowAllHiddenCategories = $resultAllHiddenCategories[0];
             $allHiddenCategories = explode(',', $rowAllHiddenCategories['hidden_stories_categories']);
         }
 
@@ -48,13 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     $storiesSql = "SELECT * FROM stories $condition";
-    $stmt = $conn->prepare($storiesSql);\nsimpleExecute($sql);\n$storiesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $storiesResult = simpleQuery($storiesSql);
 
     if ($storiesResult === false) {
-        die('Error executing query: ' . $conn->errorInfo()[2]);
+        die('Error executing query');
     }
 
-    if ($storiesResult->num_rows > 0) {
+    if (count($storiesResult) > 0) {
         foreach ($storiesResult as $storyRow) {
 echo '<style>';
 echo '.story-card { display: flex; flex-direction: column; height: 100%; max-height: 480px; }'; // Adjust the height as needed

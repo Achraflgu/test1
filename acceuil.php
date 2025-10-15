@@ -1,7 +1,5 @@
 <?php
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
 
 if (!isset($_GET['kidId'])) {
     echo "Kid ID is not set!";

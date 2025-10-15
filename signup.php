@@ -73,9 +73,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                 }
             }
 
-            // Redirect to login page or any other desired page after successful signup
-            header("Location: login.html");
-            exit();
+                    // Auto-login after successful signup
+                    session_start();
+                    $_SESSION['user_id'] = $last_id;
+                    $_SESSION['email'] = $email;
+                    $_SESSION['is_parent'] = $is_parent;
+                    
+                    // Redirect to login.php for auto-login processing
+                    header("Location: login.php?auto_login=1&email=" . urlencode($email) . "&password=" . urlencode($password));
+                    exit();
         } else {
             error_log("Error inserting user information");
             header("Location: signup.php?error=user_insert_failed");

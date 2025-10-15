@@ -25,8 +25,7 @@ if (isset($_GET['userId'])) {
         $stmt->fetch();
     }
     
-    // Close the statement
-    $stmt// PDO connection closes automatically;
+    // PDO connection closes automatically
 }
 ?>
 <!DOCTYPE html>

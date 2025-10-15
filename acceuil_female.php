@@ -744,6 +744,15 @@ if ($result && count($result) > 0) {
 
         <script>
             jQuery(document).ready(function($) {
+                // Save user data to localStorage
+                <?php if (isset($_GET['kidId']) && isset($_GET['kidName']) && isset($_GET['gender'])): ?>
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('selectedKidId', '<?php echo $_GET['kidId']; ?>');
+                    localStorage.setItem('selectedKidName', '<?php echo addslashes($_GET['kidName']); ?>');
+                    localStorage.setItem('selectedKidGender', '<?php echo $_GET['gender']; ?>');
+                    localStorage.setItem('loginTime', new Date().toISOString());
+                <?php endif; ?>
+                
                 // Function to fetch and display notifications
                 var displayedMessages = 3; // Number of messages initially displayed
 
@@ -1586,14 +1595,35 @@ if ($result && count($result) > 0) {
                     // Show loading spinner while waiting
                     $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging out...');
 
-                    // Perform any logout logic here
+                    // Clear localStorage immediately
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('userEmail');
+                    localStorage.removeItem('userId');
+                    localStorage.removeItem('loginTime');
+                    localStorage.removeItem('selectedKidId');
+                    localStorage.removeItem('selectedKidName');
+                    localStorage.removeItem('selectedKidGender');
+                    
+                    // Clear any other user-related data
+                    const keysToRemove = [];
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (key && (key.includes('user') || key.includes('kid') || key.includes('child'))) {
+                            keysToRemove.push(key);
+                        }
+                    }
+                    keysToRemove.forEach(key => {
+                        localStorage.removeItem(key);
+                    });
 
-                    // Redirect to login after 3 seconds
-                    setTimeout(function() {
-                        window.location.href = "login.html";
-                    }, 3000);
+                    // Log historical data
                     var pageName = $(this).attr("id");
                     logHistoricalData(pageName);
+
+                    // Redirect to logout page after 1 second
+                    setTimeout(function() {
+                        window.location.href = "logout.php";
+                    }, 1000);
                 });
 
 

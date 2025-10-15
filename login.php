@@ -3,6 +3,45 @@ session_start();
 
 require_once('config/simple_database.php');
 
+// Handle auto-login from signup
+if (isset($_GET['auto_login']) && $_GET['auto_login'] == '1') {
+    $enteredEmail = $_GET['email'];
+    $enteredPassword = $_GET['password'];
+    
+    // Use simple query without prepared statements
+    $sql = "SELECT * FROM users WHERE email = '" . addslashes($enteredEmail) . "'";
+    $result = simpleQuery($sql);
+
+    if (count($result) > 0) {
+        $row = $result[0];
+        if ($enteredPassword == $row['password']) {
+            if (isset($row['isAdmin']) && $row['isAdmin'] == 1) {
+                // Admin user, redirect to the admin page
+                header("Location: admin.php");
+                exit();
+            } else {
+                // Fetch information about children from the 'children' table
+                $_SESSION['user_id'] = $row['id'];
+                $userId = $row['id'];
+                
+                // Use simple query for children
+                $childrenSql = "SELECT * FROM children WHERE user_id = " . intval($userId);
+                $childrenResult = simpleQuery($childrenSql);
+
+                // Check if there are children
+                if (count($childrenResult) > 0) {
+                    // Redirect to gender selection page with auto-login flag
+                    header("Location: gender.php?auto_login=1");
+                    exit();
+                } else {
+                    // No children, show the no children message
+                    // Continue to display the page below
+                }
+            }
+        }
+    }
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $enteredEmail = $_POST['loginEmail'];
     $enteredPassword = trim($_POST['loginPassword']);
@@ -76,17 +115,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     echo '</div>';
                     echo '</div>';
                 } else {
-                    // If there are no children, show add child option
+                    // If there are no children, show message only
                     echo '<div class="container mt-10">';
                     echo '<div class="row justify-content-center align-items-center">';
                     echo '<div class="col-lg-10 col-md-12 text-center">';
                     echo '<h2 class=" " style="font-weight: bold; text-align: center; ">No Child Profiles Found</h2>';
-                    echo '<p style="font-size: 18px; color: #666; margin-bottom: 30px;">You don\'t have any child profiles yet. Add your first child to get started!</p>';
-                    echo '<div class="text-center">';
-                    echo '<a href="add_child_new.html?userId=' . $userId . '" class="btn btn-primary btn-lg" style="background-color: #5f2a72; border: none; padding: 15px 30px; font-size: 18px;">';
-                    echo '<i class="fas fa-user-plus"></i> Add Your First Child';
-                    echo '</a>';
-                    echo '</div>';
+                    echo '<p style="font-size: 18px; color: #666; margin-bottom: 30px;">You don\'t have any child profiles yet.</p>';
                     echo '</div>';
                     echo '</div>';
                     echo '</div>';
@@ -493,6 +527,73 @@ h2{
         });
     </script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    
+    <script>
+        // localStorage Management for Login
+        $(document).ready(function() {
+            // Check if user is already logged in via localStorage
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userEmail = localStorage.getItem('userEmail');
+            const userId = localStorage.getItem('userId');
+            
+            if (isLoggedIn === 'true' && userEmail && userId) {
+                // User is already logged in, redirect to appropriate page
+                window.location.href = 'gender.php?auto_login=1';
+                return;
+            }
+            
+            // Handle successful login - save to localStorage
+            <?php if (isset($_SESSION['user_id']) && isset($_GET['auto_login'])): ?>
+                // Auto-login from signup - save to localStorage
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userEmail', '<?php echo addslashes($_SESSION['email'] ?? ''); ?>');
+                localStorage.setItem('userId', '<?php echo $_SESSION['user_id']; ?>');
+                localStorage.setItem('loginTime', new Date().toISOString());
+            <?php endif; ?>
+            
+            // Handle regular login form submission
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                const email = $('#loginEmail').val();
+                const password = $('#loginPassword').val();
+                
+                // Submit form via AJAX
+                $.ajax({
+                    url: 'login.php',
+                    type: 'POST',
+                    data: {
+                        loginEmail: email,
+                        loginPassword: password
+                    },
+                    success: function(response) {
+                        // Check if login was successful (no error messages)
+                        if (!response.includes('Incorrect password') && !response.includes('User not found')) {
+                            // Save login info to localStorage
+                            localStorage.setItem('isLoggedIn', 'true');
+                            localStorage.setItem('userEmail', email);
+                            localStorage.setItem('loginTime', new Date().toISOString());
+                            
+                            // Extract userId from response or session
+                            const userIdMatch = response.match(/userId['"]\s*:\s*['"]?(\d+)['"]?/);
+                            if (userIdMatch) {
+                                localStorage.setItem('userId', userIdMatch[1]);
+                            }
+                            
+                            // Reload page to show logged in state
+                            location.reload();
+                        } else {
+                            // Show error message
+                            alert('Login failed. Please check your credentials.');
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred during login.');
+                    }
+                });
+            });
+        });
+    </script>
 
 </body>
 

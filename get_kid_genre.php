@@ -35,7 +35,5 @@ if ($result && count($result) > 0) {
     echo json_encode(['error' => 'Invalid kid ID']);
 }
 
-// Close the statement and the database connection
-$stmt// PDO connection closes automatically;
-$conn// PDO connection closes automatically;
+// PDO connection closes automatically
 ?>

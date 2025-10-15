@@ -74,8 +74,18 @@ function executeQuery($sql, $params = []) {
         $stmt->execute($params);
         return $stmt;
     } catch(PDOException $e) {
-        error_log("Query error: " . $e->getMessage());
-        throw new Exception("Query execution failed: " . $e->getMessage());
+        // Handle cached plan error by recreating connection
+        if (strpos($e->getMessage(), 'cached plan must not change result type') !== false) {
+            error_log("Cached plan error detected, recreating connection: " . $e->getMessage());
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare($sql);
+            $stmt->execute($params);
+            return $stmt;
+        } else {
+            error_log("Query error: " . $e->getMessage());
+            throw new Exception("Query execution failed: " . $e->getMessage());
+        }
     }
 }
 

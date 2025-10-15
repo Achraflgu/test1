@@ -10,10 +10,24 @@ session_start();
         $enteredPassword = trim($_POST['loginPassword']);
     
         $sql = "SELECT * FROM users WHERE email = :email";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':email', $enteredEmail);
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':email', $enteredEmail);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            // Handle cached plan error by recreating connection
+            if (strpos($e->getMessage(), 'cached plan must not change result type') !== false) {
+                $database = new Database();
+                $conn = $database->getConnection();
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(':email', $enteredEmail);
+                $stmt->execute();
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                throw $e;
+            }
+        }
     
         if (count($result) > 0) {
             $row = $result[0];
@@ -27,10 +41,24 @@ session_start();
                     $_SESSION['user_id'] = $row['id'];
                     $userId = $row['id'];
                     $childrenSql = "SELECT * FROM children WHERE user_id = :user_id";
-                    $childrenStmt = $conn->prepare($childrenSql);
-                    $childrenStmt->bindParam(':user_id', $userId);
-                    $childrenStmt->execute();
-                    $childrenResult = $childrenStmt->fetchAll(PDO::FETCH_ASSOC);
+                    try {
+                        $childrenStmt = $conn->prepare($childrenSql);
+                        $childrenStmt->bindParam(':user_id', $userId);
+                        $childrenStmt->execute();
+                        $childrenResult = $childrenStmt->fetchAll(PDO::FETCH_ASSOC);
+                    } catch(PDOException $e) {
+                        // Handle cached plan error by recreating connection
+                        if (strpos($e->getMessage(), 'cached plan must not change result type') !== false) {
+                            $database = new Database();
+                            $conn = $database->getConnection();
+                            $childrenStmt = $conn->prepare($childrenSql);
+                            $childrenStmt->bindParam(':user_id', $userId);
+                            $childrenStmt->execute();
+                            $childrenResult = $childrenStmt->fetchAll(PDO::FETCH_ASSOC);
+                        } else {
+                            throw $e;
+                        }
+                    }
     
                     // Check if there are children
                     if (count($childrenResult) > 0) {
@@ -99,10 +127,24 @@ session_start();
     if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['userId'])) {
         $userId = $_GET['userId'];
         $childrenSql = "SELECT * FROM children WHERE user_id = :user_id";
-        $childrenStmt = $conn->prepare($childrenSql);
-        $childrenStmt->bindParam(':user_id', $userId);
-        $childrenStmt->execute();
-        $childrenResult = $childrenStmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $childrenStmt = $conn->prepare($childrenSql);
+            $childrenStmt->bindParam(':user_id', $userId);
+            $childrenStmt->execute();
+            $childrenResult = $childrenStmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            // Handle cached plan error by recreating connection
+            if (strpos($e->getMessage(), 'cached plan must not change result type') !== false) {
+                $database = new Database();
+                $conn = $database->getConnection();
+                $childrenStmt = $conn->prepare($childrenSql);
+                $childrenStmt->bindParam(':user_id', $userId);
+                $childrenStmt->execute();
+                $childrenResult = $childrenStmt->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                throw $e;
+            }
+        }
 
         if (count($childrenResult) > 0) {
             echo '<div class="container mt-5">';

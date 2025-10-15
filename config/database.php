@@ -66,6 +66,13 @@ function getDBConnection() {
     return $db;
 }
 
+// Function to reset database connection
+function resetDBConnection() {
+    global $db;
+    $db = null;
+    return getDBConnection();
+}
+
 // Helper function for prepared statements
 function executeQuery($sql, $params = []) {
     $conn = getDBConnection();
@@ -76,9 +83,8 @@ function executeQuery($sql, $params = []) {
     } catch(PDOException $e) {
         // Handle cached plan error by recreating connection
         if (strpos($e->getMessage(), 'cached plan must not change result type') !== false) {
-            error_log("Cached plan error detected, recreating connection: " . $e->getMessage());
-            $database = new Database();
-            $conn = $database->getConnection();
+            error_log("Cached plan error detected, resetting connection: " . $e->getMessage());
+            $conn = resetDBConnection();
             $stmt = $conn->prepare($sql);
             $stmt->execute($params);
             return $stmt;

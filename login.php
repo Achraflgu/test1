@@ -2,32 +2,13 @@
 session_start();
 
     require_once('config/database.php');
-    $database = new Database();
-    $conn = $database->getConnection();
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $enteredEmail = $_POST['loginEmail'];
         $enteredPassword = trim($_POST['loginPassword']);
     
-        $sql = "SELECT * FROM users WHERE email = :email";
-        try {
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':email', $enteredEmail);
-            $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch(PDOException $e) {
-            // Handle cached plan error by recreating connection
-            if (strpos($e->getMessage(), 'cached plan must not change result type') !== false) {
-                $database = new Database();
-                $conn = $database->getConnection();
-                $stmt = $conn->prepare($sql);
-                $stmt->bindParam(':email', $enteredEmail);
-                $stmt->execute();
-                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            } else {
-                throw $e;
-            }
-        }
+        // Use helper function that handles cached plan errors automatically
+        $result = fetchAll("SELECT * FROM users WHERE email = :email", ['email' => $enteredEmail]);
     
         if (count($result) > 0) {
             $row = $result[0];
@@ -40,25 +21,8 @@ session_start();
                     // Fetch information about children from the 'children' table
                     $_SESSION['user_id'] = $row['id'];
                     $userId = $row['id'];
-                    $childrenSql = "SELECT * FROM children WHERE user_id = :user_id";
-                    try {
-                        $childrenStmt = $conn->prepare($childrenSql);
-                        $childrenStmt->bindParam(':user_id', $userId);
-                        $childrenStmt->execute();
-                        $childrenResult = $childrenStmt->fetchAll(PDO::FETCH_ASSOC);
-                    } catch(PDOException $e) {
-                        // Handle cached plan error by recreating connection
-                        if (strpos($e->getMessage(), 'cached plan must not change result type') !== false) {
-                            $database = new Database();
-                            $conn = $database->getConnection();
-                            $childrenStmt = $conn->prepare($childrenSql);
-                            $childrenStmt->bindParam(':user_id', $userId);
-                            $childrenStmt->execute();
-                            $childrenResult = $childrenStmt->fetchAll(PDO::FETCH_ASSOC);
-                        } else {
-                            throw $e;
-                        }
-                    }
+                    // Use helper function that handles cached plan errors automatically
+                    $childrenResult = fetchAll("SELECT * FROM children WHERE user_id = :user_id", ['user_id' => $userId]);
     
                     // Check if there are children
                     if (count($childrenResult) > 0) {
@@ -126,25 +90,8 @@ session_start();
 
     if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['userId'])) {
         $userId = $_GET['userId'];
-        $childrenSql = "SELECT * FROM children WHERE user_id = :user_id";
-        try {
-            $childrenStmt = $conn->prepare($childrenSql);
-            $childrenStmt->bindParam(':user_id', $userId);
-            $childrenStmt->execute();
-            $childrenResult = $childrenStmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch(PDOException $e) {
-            // Handle cached plan error by recreating connection
-            if (strpos($e->getMessage(), 'cached plan must not change result type') !== false) {
-                $database = new Database();
-                $conn = $database->getConnection();
-                $childrenStmt = $conn->prepare($childrenSql);
-                $childrenStmt->bindParam(':user_id', $userId);
-                $childrenStmt->execute();
-                $childrenResult = $childrenStmt->fetchAll(PDO::FETCH_ASSOC);
-            } else {
-                throw $e;
-            }
-        }
+        // Use helper function that handles cached plan errors automatically
+        $childrenResult = fetchAll("SELECT * FROM children WHERE user_id = :user_id", ['user_id' => $userId]);
 
         if (count($childrenResult) > 0) {
             echo '<div class="container mt-5">';

@@ -13,6 +13,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Process the uploaded photo
         $targetDir = "uploads/";
+        $targetFile = ""; // Initialize targetFile
+        $sql = ""; // Initialize sql
 
         // Check if a photo is uploaded
         if (!empty($_FILES["newKidPhoto"]["name"])) {
@@ -61,9 +63,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sql = "INSERT INTO children (user_id, kid_gender, kid_name, kid_age, kid_photo) VALUES (" . intval($userId) . ", '" . addslashes($gender) . "', '" . addslashes($kidName) . "', " . intval($age) . ", '" . addslashes($targetFile) . "')";
         }
 
-        try {
-            $result = simpleExecute($sql);
-            if ($result) {
+        // Only execute if we have a valid SQL statement
+        if (!empty($sql)) {
+            try {
+                $result = simpleExecute($sql);
+                if ($result) {
                 // Check if userId is already present in the URL
                 $referer = $_SERVER['HTTP_REFERER'];
                 if (strpos($referer, 'userId') === false) {
@@ -71,14 +75,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $referer .= (strpos($referer, '?') !== false ? '&' : '?') . "userId=$userId";
                 }
 
-                // Redirect back to the referring page with or without userId parameter
-                header("Location: " . $referer);
-                exit();
-            } else {
-                echo "Error: Failed to insert child profile";
+                    // Redirect back to the referring page with or without userId parameter
+                    header("Location: " . $referer);
+                    exit();
+                } else {
+                    echo "Error: Failed to insert child profile";
+                }
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
             }
-        } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+        } else {
+            echo "Error: No SQL statement generated";
         }
     } else {
         echo "User ID not set in the session.";

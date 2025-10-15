@@ -1,4 +1,6 @@
 <?php
+// Start output buffering to prevent header issues
+ob_start();
 require_once('config/simple_database.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
@@ -32,20 +34,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 
                 // Check if file already exists
                 if (file_exists($targetFile)) {
-                    echo "Sorry, file already exists.";
+                    error_log("File already exists: $targetFile");
                     $uploadOk = 0;
                 }
 
                 // Check file size
                 if ($_FILES["kidPhoto$i"]["size"] > 500000) {
-                    echo "Sorry, your file is too large.";
+                    error_log("File too large: " . $_FILES["kidPhoto$i"]["name"]);
                     $uploadOk = 0;
                 }
 
                 // Allow certain file formats
                 $allowedFileTypes = ["jpg", "jpeg", "png", "gif"];
                 if (!in_array($imageFileType, $allowedFileTypes)) {
-                    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                    error_log("Invalid file type: $imageFileType");
                     $uploadOk = 0;
                 }
 
@@ -55,9 +57,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                     $targetFile = $defaultPhoto;
                 } else {
                     if (move_uploaded_file($_FILES["kidPhoto$i"]["tmp_name"], $targetFile)) {
-                        echo "The file " . basename($_FILES["kidPhoto$i"]["name"]) . " has been uploaded and saved.";
+                        error_log("File uploaded successfully: " . basename($_FILES["kidPhoto$i"]["name"]));
                     } else {
-                        echo "Sorry, there was an error uploading your file.";
+                        error_log("Error uploading file: " . basename($_FILES["kidPhoto$i"]["name"]));
                     }
                 }
 
@@ -67,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                 try {
                     simpleExecute($insertChildSql);
                 } catch (Exception $e) {
-                    echo "Error inserting child information: " . $e->getMessage();
+                    error_log("Error inserting child information: " . $e->getMessage());
                 }
             }
 
@@ -75,10 +77,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             header("Location: login.html");
             exit();
         } else {
-            echo "Error inserting user information.";
+            error_log("Error inserting user information");
+            header("Location: signup.php?error=user_insert_failed");
+            exit();
         }
     } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+        error_log("Error: " . $e->getMessage());
+        header("Location: signup.php?error=signup_failed");
+        exit();
     }
 }
 ?>

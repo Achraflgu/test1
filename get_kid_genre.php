@@ -1,5 +1,5 @@
 <?php
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -16,17 +16,17 @@ $sql = "SELECT kid_gender FROM children WHERE id = ?";
 $stmt = $conn->prepare($sql);
 
 // Bind the parameter to the statement
-$stmt->bind_param("i", $selectedKidId);
+
 
 // Execute the statement
-$stmt->execute();
+simpleExecute($sql);
 
 // Get the result
 $result = $stmt->get_result();
 
 // Check if the query was successful
 if ($result && $result->num_rows > 0) {
-    $row = $result->fetch_assoc();
+    $row = simpleFetchAll($result)[0];
     $kidGenre = $row['kid_gender'];
 
     // Return kid's genre as JSON

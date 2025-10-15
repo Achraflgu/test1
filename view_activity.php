@@ -141,7 +141,7 @@ p {
         <a href="javascript:history.back()" class="back-button">
             <i class="fas fa-arrow-left"></i> Back
         </a> <?php
-                require_once('config/database.php');
+                require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -150,7 +150,7 @@ $conn = $database->getConnection();
 
                     // Fetch activity details based on the provided activity ID
                     $activitySql = "SELECT * FROM activities WHERE id = $activityId";
-                    $stmt = $conn->prepare($activitySql);\n$stmt->execute();\n$activityResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $stmt = $conn->prepare($activitySql);\nsimpleExecute($sql);\n$activityResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                     if ($activityResult->num_rows > 0) {
                         $activityRow = $activityResult->fetch_assoc();
@@ -177,7 +177,7 @@ $conn = $database->getConnection();
                         // Fetch other activities with the same category
                         $category = $activityRow['category'];
                         $otherActivitiesSql = "SELECT * FROM activities WHERE category = '$category' AND id != $activityId LIMIT 4";
-                        $stmt = $conn->prepare($otherActivitiesSql);\n$stmt->execute();\n$otherActivitiesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $stmt = $conn->prepare($otherActivitiesSql);\nsimpleExecute($sql);\n$otherActivitiesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                         if ($otherActivitiesResult->num_rows > 0) {
                             echo '<div class="related-activities">';

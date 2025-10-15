@@ -9,7 +9,7 @@ if (!isset($_GET['kidId'])) {
 
 // Include your database connection
 include('log_history.php');
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -18,10 +18,10 @@ $selectedKidId = $_GET['kidId']; // Get the kid's ID from the URL
 
 // Fetch kid information from the database based on the selected ID
 $sql = "SELECT * FROM children WHERE id = $selectedKidId";
-$result = $conn->query($sql);
+simpleQuery($sql);
 
 if ($result && $result->num_rows > 0) {
-    $row = $result->fetch_assoc();
+    $row = simpleFetchAll($result)[0];
     $selectedKidName = $row['kid_name'];
     $selectedGender = $row['kid_gender'];
     $selectedKidPhoto = $row['kid_photo'];
@@ -30,10 +30,10 @@ if ($result && $result->num_rows > 0) {
 
     // Fetch user_id based on kid_name and id
     $sql1 = "SELECT user_id FROM children WHERE kid_name = '$selectedKidName' AND id = $selectedKidId";
-    $result = $conn->query($sql1);
+    simpleQuery($sql1);
 
     if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc();
+        $row = simpleFetchAll($result)[0];
         $selectedUserId = $row['user_id'];
     }
 ?>

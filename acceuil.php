@@ -1,5 +1,5 @@
 <?php
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -12,7 +12,7 @@ $selectedKidId = $_GET['kidId'];
 
 $sql = "SELECT * FROM children WHERE id = $selectedKidId";
 $stmt = $conn->prepare($sql);
-$stmt->execute();
+simpleExecute($sql);
 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if (count($result) > 0) {
@@ -46,7 +46,7 @@ function fetchRandomEntries($conn, $table, $limit = 5, $hiddenCategories = [])
 
     $sql = "SELECT * FROM $table WHERE 1 $whereCondition ORDER BY RAND() LIMIT $limit";
     $stmt = $conn->prepare($sql);
-    $stmt->execute();
+    simpleExecute($sql);
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $entries = [];

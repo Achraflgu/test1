@@ -76,9 +76,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     echo '</div>';
                     echo '</div>';
                 } else {
-                    // If there are no children, redirect to the main page
-                    header("Location: login.html");
-                    exit();
+                    // If there are no children, show add child option
+                    echo '<div class="container mt-10">';
+                    echo '<div class="row justify-content-center align-items-center">';
+                    echo '<div class="col-lg-10 col-md-12 text-center">';
+                    echo '<h2 class=" " style="font-weight: bold; text-align: center; ">No Child Profiles Found</h2>';
+                    echo '<p style="font-size: 18px; color: #666; margin-bottom: 30px;">You don\'t have any child profiles yet. Add your first child to get started!</p>';
+                    echo '<div class="text-center">';
+                    echo '<a href="add_child_new.html?userId=' . $userId . '" class="btn btn-primary btn-lg" style="background-color: #5f2a72; border: none; padding: 15px 30px; font-size: 18px;">';
+                    echo '<i class="fas fa-user-plus"></i> Add Your First Child';
+                    echo '</a>';
+                    echo '</div>';
+                    echo '</div>';
+                    echo '</div>';
+                    echo '</div>';
                 }
             }
         } else {

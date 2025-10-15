@@ -1,7 +1,7 @@
 <!-- process_form.php -->
 
 <?php
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 

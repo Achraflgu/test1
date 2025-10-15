@@ -1,7 +1,7 @@
 <?php
 // delete_child.php
 
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Get the user ID associated with the child
     $getUserSql = "SELECT user_id FROM children WHERE id = $childId";
-    $stmt = $conn->prepare($getUserSql);\n$stmt->execute();\n$userResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare($getUserSql);\nsimpleExecute($sql);\n$userResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($userResult && $userResult->num_rows > 0) {
         $userData = $userResult->fetch_assoc();

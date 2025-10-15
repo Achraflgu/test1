@@ -1,6 +1,6 @@
 <?php
 // Include the database connection file
-include('connexion.php');
+require_once('config/simple_database.php');
 
 // Check if the story ID is provided
 if (isset($_GET['storyId'])) {
@@ -9,14 +9,14 @@ if (isset($_GET['storyId'])) {
     // Prepare and execute the SQL query to fetch story details
     $query = "SELECT * FROM stories WHERE id = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param('i', $storyId);
-    $stmt->execute();
+    
+    simpleExecute($sql);
     $result = $stmt->get_result();
 
     // Check if the query was successful
     if ($result) {
         // Fetch the story details as an associative array
-        $storyDetails = $result->fetch_assoc();
+        $storyDetails = simpleFetchAll($result)[0];
 
         // Return the story details as JSON
         header('Content-Type: application/json');
@@ -27,8 +27,8 @@ if (isset($_GET['storyId'])) {
     }
 
     // Close the database connection
-    $stmt->close();
-    $conn->close();
+    
+    
 } else {
     // Handle the case where the story ID is not provided
     echo json_encode(['error' => 'Story ID not provided']);

@@ -135,7 +135,7 @@
             <i class="fas fa-arrow-left"></i> Back
         </a>
         <?php
-        require_once('config/database.php');
+        require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -144,7 +144,7 @@ $conn = $database->getConnection();
 
             // Fetch story details based on the provided story ID
             $storySql = "SELECT * FROM stories WHERE id = $storyId";
-            $stmt = $conn->prepare($storySql);\n$stmt->execute();\n$storyResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt = $conn->prepare($storySql);\nsimpleExecute($sql);\n$storyResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if ($storyResult->num_rows > 0) {
                 $storyRow = $storyResult->fetch_assoc();
@@ -174,7 +174,7 @@ $conn = $database->getConnection();
                 // Fetch other stories with the same category
                 $category = $storyRow['category'];
                 $otherStoriesSql = "SELECT * FROM stories WHERE category = '$category' AND id != $storyId LIMIT 4";
-                $stmt = $conn->prepare($otherStoriesSql);\n$stmt->execute();\n$otherStoriesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $stmt = $conn->prepare($otherStoriesSql);\nsimpleExecute($sql);\n$otherStoriesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 if ($otherStoriesResult->num_rows > 0) {
                     echo '<div class="related-stories">';

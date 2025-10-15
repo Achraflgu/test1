@@ -2,7 +2,7 @@
 // verify_password.php
 
 // Include your database connection
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -13,12 +13,12 @@ $password = $_POST['password']; // Replace with the actual parameter name
 // Fetch user information from the database based on the user ID
 $sql = "SELECT * FROM users WHERE id = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $userId);
-$stmt->execute();
+
+simpleExecute($sql);
 $result = $stmt->get_result();
 
 if ($result && $result->num_rows > 0) {
-    $row = $result->fetch_assoc();
+    $row = simpleFetchAll($result)[0];
     $userPasswordHash = $row['password']; // Replace with the actual column name
 
     // Check if the entered password matches the one in the database

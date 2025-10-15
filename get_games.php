@@ -1,5 +1,5 @@
 <?php
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     $gamesSql = "SELECT * FROM games $condition";
-    $stmt = $conn->prepare($gamesSql);\n$stmt->execute();\n$gamesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare($gamesSql);\nsimpleExecute($sql);\n$gamesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($gamesResult === false) {
         // Handle the SQL error

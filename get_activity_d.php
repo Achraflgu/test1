@@ -1,6 +1,6 @@
 <?php
 // Include the database connection file
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -11,14 +11,14 @@ if (isset($_GET['activityId'])) {
     // Prepare and execute the SQL query to fetch activity details
     $query = "SELECT * FROM activities WHERE id = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param('i', $activityId);
-    $stmt->execute();
+    
+    simpleExecute($sql);
     $result = $stmt->get_result();
 
     // Check if the query was successful
     if ($result) {
         // Fetch the activity details as an associative array
-        $activityDetails = $result->fetch_assoc();
+        $activityDetails = simpleFetchAll($result)[0];
 
         // Return the activity details as JSON
         header('Content-Type: application/json');

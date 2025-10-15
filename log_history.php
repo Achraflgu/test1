@@ -6,25 +6,18 @@ $selectedKidId = isset($_POST['kidId']) ? intval($_POST['kidId']) : 0;
 $pageName = isset($_POST['pageName']) ? $_POST['pageName'] : '';
 
 // Include your database connection
-require_once('connexion.php');
+require_once('config/simple_database.php');
 
 // Get the current date and time
 $dateTime = date("Y-m-d H:i:s");
 
-// Escape values to prevent SQL injection
-$selectedKidId = mysqli_real_escape_string($conn, $selectedKidId);
-$dateTime = mysqli_real_escape_string($conn, $dateTime);
-$pageName = mysqli_real_escape_string($conn, $pageName);
+// Insert data into the historic_data table using simple query
+$sql = "INSERT INTO historic_data (kid_id, date_time, page_name) VALUES (" . intval($selectedKidId) . ", '" . addslashes($dateTime) . "', '" . addslashes($pageName) . "')";
 
-// Insert data into the historic_data table
-$sql = "INSERT INTO historic_data (kid_id, date_time, page_name) VALUES ('$selectedKidId', '$dateTime', '$pageName')";
-
-// Check for errors in the query execution
-if ($conn->query($sql)) {
-} else {
-    echo "Error logging historical data: " . $conn->errorInfo()[2];
+// Execute the query
+try {
+    simpleExecute($sql);
+} catch (Exception $e) {
+    error_log("Error logging historical data: " . $e->getMessage());
 }
-
-// Close the database connection
-$conn// PDO connection closes automatically;
 ?>

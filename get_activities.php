@@ -1,5 +1,5 @@
 <?php
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     $activitiesSql = "SELECT * FROM activities $condition";
-    $stmt = $conn->prepare($activitiesSql);\n$stmt->execute();\n$activitiesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare($activitiesSql);\nsimpleExecute($sql);\n$activitiesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($activitiesResult === false) {
         // Handle the SQL error

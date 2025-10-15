@@ -5,7 +5,7 @@
 $selectedKidId = isset($_GET['kidId']) ? intval($_GET['kidId']) : 0;
 
 // Include your database connection
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -21,8 +21,8 @@ $offset = ($pageNumber - 1) * $recordsPerPage;
 // Fetch historic data based on the kid ID using prepared statements with pagination
 $sql = "SELECT *, TIMEDIFF(LEAD(date_time) OVER (PARTITION BY kid_id ORDER BY date_time), date_time) AS time_spent FROM historic_data WHERE kid_id = ? ORDER BY date_time DESC LIMIT ?, ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("iii", $selectedKidId, $offset, $recordsPerPage);
-$stmt->execute();
+
+simpleExecute($sql);
 $result = $stmt->get_result();
 
 // Check for errors in the query execution
@@ -189,7 +189,7 @@ h2 {
                 </thead>
                 <tbody>
                 <?php
-                while ($row = $result->fetch_assoc()) {
+                while ($row = simpleFetchAll($result)[0]) {
                     ?>
                     <tr>
                         <td><?php echo date('Y-m-d', strtotime($row['date_time'])); ?></td>

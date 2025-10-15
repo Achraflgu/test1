@@ -1,7 +1,7 @@
 <?php
 // get_child_details.php
 
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Fetch child details from the database
     $childDetailsSql = "SELECT * FROM children WHERE id = $childId";
-    $stmt = $conn->prepare($childDetailsSql);\n$stmt->execute();\n$childDetailsResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare($childDetailsSql);\nsimpleExecute($sql);\n$childDetailsResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($childDetailsResult) {
         $childDetails = $childDetailsResult->fetch_assoc();

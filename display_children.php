@@ -1,5 +1,5 @@
 <?php
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -9,7 +9,7 @@ function displayChildrenForUser($userId)
     global $conn;
 
     $childrenSql = "SELECT * FROM children WHERE user_id = $userId";
-    $stmt = $conn->prepare($childrenSql);\n$stmt->execute();\n$childrenResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare($childrenSql);\nsimpleExecute($sql);\n$childrenResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $childrenData = array();
 
@@ -25,7 +25,7 @@ if (isset($_POST['action'])) {
     if ($_POST['action'] == 'get_users') {
         // Requête AJAX pour obtenir et afficher les utilisateurs
         $usersSql = "SELECT * FROM users";
-        $stmt = $conn->prepare($usersSql);\n$stmt->execute();\n$usersResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $conn->prepare($usersSql);\nsimpleExecute($sql);\n$usersResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         echo '<table class="table">
                 <thead>

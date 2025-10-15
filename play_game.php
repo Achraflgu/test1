@@ -155,7 +155,7 @@ p {
             <i class="fas fa-arrow-left"></i> Back
         </a>
         <?php
-        require_once('config/database.php');
+        require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -164,7 +164,7 @@ $conn = $database->getConnection();
 
             // Fetch current game details based on the provided game ID
             $gameSql = "SELECT * FROM games WHERE id = $gameId";
-            $stmt = $conn->prepare($gameSql);\n$stmt->execute();\n$gameResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt = $conn->prepare($gameSql);\nsimpleExecute($sql);\n$gameResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if ($gameResult->num_rows > 0) {
                 $gameRow = $gameResult->fetch_assoc();
@@ -191,7 +191,7 @@ $conn = $database->getConnection();
                 // Fetch other games with the same category
                 $category = $gameRow['category'];
                 $otherGamesSql = "SELECT * FROM games WHERE category = '$category' AND id != $gameId LIMIT 4";
-                $stmt = $conn->prepare($otherGamesSql);\n$stmt->execute();\n$otherGamesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $stmt = $conn->prepare($otherGamesSql);\nsimpleExecute($sql);\n$otherGamesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 if ($otherGamesResult->num_rows > 0) {
                     echo '<div class="more-games">';

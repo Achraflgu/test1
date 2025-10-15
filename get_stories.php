@@ -1,5 +1,5 @@
 <?php
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     $storiesSql = "SELECT * FROM stories $condition";
-    $stmt = $conn->prepare($storiesSql);\n$stmt->execute();\n$storiesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare($storiesSql);\nsimpleExecute($sql);\n$storiesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($storiesResult === false) {
         die('Error executing query: ' . $conn->errorInfo()[2]);

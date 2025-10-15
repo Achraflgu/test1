@@ -2,7 +2,7 @@
 // mark_all_notifications_as_read.php
 
 // Include necessary files and database connection
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -11,7 +11,7 @@ $childId = $_POST['childId'];
 
 // Update the notifications to mark them as read
 $sql = "UPDATE notifications SET is_read = TRUE WHERE kid_id = '$childId'";
-$result = $conn->query($sql);
+simpleQuery($sql);
 
 if ($result) {
     echo json_encode(['success' => true]);

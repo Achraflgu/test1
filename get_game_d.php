@@ -1,5 +1,5 @@
 <?php
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -9,14 +9,14 @@ if (isset($_GET['gameId'])) {
     // Prepare and execute the SQL query to fetch game details
     $query = "SELECT * FROM games WHERE id = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param('i', $gameId);
-    $stmt->execute();
+    
+    simpleExecute($sql);
     $result = $stmt->get_result();
 
     // Check if the query was successful
     if ($result) {
         // Fetch the game details as an associative array
-        $gameDetails = $result->fetch_assoc();
+        $gameDetails = simpleFetchAll($result)[0];
 
         // Return the game details as JSON
         header('Content-Type: application/json');

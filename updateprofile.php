@@ -2,7 +2,7 @@
 // updateprofile.php
 
 // Include your database connection
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -11,10 +11,10 @@ $selectedKidId = $_POST['kidId']; // Use $_POST instead of $_GET for security
 
 // Fetch kid information from the database based on the selected ID
 $sql = "SELECT * FROM children WHERE id = $selectedKidId";
-$result = $conn->query($sql);
+simpleQuery($sql);
 
 if ($result && $result->num_rows > 0) {
-    $row = $result->fetch_assoc();
+    $row = simpleFetchAll($result)[0];
     $selectedKidName = $row['kid_name'];
     $selectedKidAge = $row['kid_age'];
     $selectedKidPhoto = $row['kid_photo'];

@@ -2,7 +2,7 @@
 // profilesetting.php
 
 // Include your database connection
-require_once('config/database.php');
+require_once('config/simple_database.php');
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -13,7 +13,7 @@ if (isset($_GET['kidId'])) {
 
     // Fetch kid information from the database based on the selected ID
     $sql = "SELECT * FROM children WHERE id = $selectedKidId";
-    $result = $conn->query($sql);
+    simpleQuery($sql);
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateProfile'])) {
         // Handle form submission (update profile)
@@ -56,7 +56,7 @@ if (isset($_GET['kidId'])) {
     
         // Execute the query only if $updateSql is defined
         if ($updateSql !== "") {
-            $stmt = $conn->prepare($updateSql);\n$stmt->execute();\n$updateResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt = $conn->prepare($updateSql);\nsimpleExecute($sql);\n$updateResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
             if ($updateResult) {
                 header("refresh:1;url=profilesetting.php?kidId=$selectedKidId");
@@ -67,7 +67,7 @@ if (isset($_GET['kidId'])) {
         }}
 
     if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc();
+        $row = simpleFetchAll($result)[0];
         $selectedKidName = $row['kid_name'];
         $selectedKidAge = $row['kid_age'];
         $selectedKidPhoto = $row['kid_photo'];
@@ -493,7 +493,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveCategories'])) { 
                                                 hidden_activities_categories = '$hiddenActivities' 
                                   WHERE id = $selectedKidId";
 
-    $stmt = $conn->prepare($updateHiddenCategoriesSql);\n$stmt->execute();\n$updateHiddenCategoriesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare($updateHiddenCategoriesSql);\nsimpleExecute($sql);\n$updateHiddenCategoriesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($updateHiddenCategoriesResult) {
         $alertMessageCategories = '<div class="alert alert-success" role="alert">Hidden categories updated successfully!</div>';
@@ -624,10 +624,10 @@ function displayCategoryCheckboxes($conn, $categoryType, $selectedKidId)
 // Function to get hidden categories from the database
 function getHiddenCategories($conn, $selectedKidId, $hiddenColumnName)
 {
-    $result = $conn->query("SELECT {$hiddenColumnName} FROM children WHERE id = $selectedKidId");
+    simpleQuery("SELECT {$hiddenColumnName} FROM children WHERE id = $selectedKidId");
 
     if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc();
+        $row = simpleFetchAll($result)[0];
         $hiddenCategories = explode(',', $row[$hiddenColumnName]);
         return array_filter($hiddenCategories);
     }

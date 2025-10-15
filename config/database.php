@@ -39,7 +39,7 @@ class Database {
             $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::ATTR_EMULATE_PREPARES => true, // Enable emulation to avoid cached plans
             ];
             
             $this->conn = new PDO($dsn, $this->username, $this->password, $options);

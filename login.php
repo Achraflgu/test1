@@ -18,7 +18,7 @@ session_start();
         if (count($result) > 0) {
             $row = $result[0];
             if ($enteredPassword == $row['password']) {
-                if ($row['isAdmin'] == 1) {
+                if (isset($row['isAdmin']) && $row['isAdmin'] == 1) {
                     // Admin user, redirect to the admin page
                     header("Location: admin.php");
                     exit();

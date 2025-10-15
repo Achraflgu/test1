@@ -10,9 +10,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $number_of_kids = isset($_POST['numberOfKids']) ? $_POST['numberOfKids'] : 0;
 
     // Insert user information
-    $insertUserSql = "INSERT INTO users (email, password, is_parent, number_of_kids) VALUES (:email, :password, :is_parent, :number_of_kids)";
+    $insertUserSql = "INSERT INTO users (username, email, password, is_parent, number_of_kids) VALUES (:username, :email, :password, :is_parent, :number_of_kids)";
 
     $stmt = $conn->prepare($insertUserSql);
+    $stmt->bindParam(':username', $email); // Use email as username for now
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':password', $password);
     $stmt->bindParam(':is_parent', $is_parent, PDO::PARAM_INT);

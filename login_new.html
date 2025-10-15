@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Children's Universe</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="shortcut icon" href="images/logo_1.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('images/bg_login_1.png');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo img {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            font-size: 16px;
+        }
+
+        .form-control:focus {
+            border-color: #4f0c3f;
+            box-shadow: 0 0 0 0.2rem rgba(79, 12, 63, 0.25);
+        }
+
+        .btn-login {
+            background-color: #4f0c3f;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background-color: #3a0a2f;
+            transform: translateY(-2px);
+        }
+
+        .btn-register {
+            background-color: transparent;
+            border: 2px solid #4f0c3f;
+            color: #4f0c3f;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-register:hover {
+            background-color: #4f0c3f;
+            color: white;
+        }
+
+        .alert {
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .loading {
+            display: none;
+        }
+
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <img src="./images/logo_1.png" alt="Children's Universe Logo">
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-login" id="loginBtn">
+                <span class="loading spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span class="btn-text">Sign In</span>
+            </button>
+        </form>
+
+        <div class="text-center mt-3">
+            <p>Don't have an account? <a href="#" id="showRegister">Sign up</a></p>
+        </div>
+
+        <!-- Registration Form (Hidden by default) -->
+        <form id="registerForm" style="display: none;">
+            <div class="form-group">
+                <label for="regEmail">Email Address</label>
+                <input type="email" class="form-control" id="regEmail" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="regPassword">Password</label>
+                <input type="password" class="form-control" id="regPassword" name="password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="isParent">Are you a parent?</label>
+                <select class="form-control" id="isParent" name="is_parent">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="numberOfKids">Number of Kids</label>
+                <input type="number" class="form-control" id="numberOfKids" name="number_of_kids" min="0" max="10">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-login" id="registerBtn">
+                <span class="loading spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span class="btn-text">Sign Up</span>
+            </button>
+        </form>
+
+        <div class="text-center mt-3" id="registerFooter" style="display: none;">
+            <p>Already have an account? <a href="#" id="showLogin">Sign in</a></p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Toggle between login and register forms
+            $('#showRegister').click(function(e) {
+                e.preventDefault();
+                $('#loginForm').hide();
+                $('#registerForm').show();
+                $('#registerFooter').show();
+                $(this).parent().hide();
+            });
+
+            $('#showLogin').click(function(e) {
+                e.preventDefault();
+                $('#registerForm').hide();
+                $('#loginForm').show();
+                $('#registerFooter').hide();
+                $('#showRegister').parent().show();
+            });
+
+            // Login form submission
+            $('#loginForm').submit(function(e) {
+                e.preventDefault();
+                
+                const email = $('#email').val();
+                const password = $('#password').val();
+
+                if (!email || !password) {
+                    showAlert('Please fill in all fields', 'danger');
+                    return;
+                }
+
+                setLoading('#loginBtn', true);
+
+                $.ajax({
+                    url: '/api/auth/login.php',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        email: email,
+                        password: password
+                    }),
+                    success: function(response) {
+                        if (response.success) {
+                            // Store user data in sessionStorage
+                            sessionStorage.setItem('user', JSON.stringify(response.user));
+                            sessionStorage.setItem('children', JSON.stringify(response.children));
+                            
+                            if (response.isAdmin) {
+                                window.location.href = 'admin.html';
+                            } else if (response.children && response.children.length > 0) {
+                                // Show child selection
+                                showChildSelection(response.children);
+                            } else {
+                                // Redirect to add child page
+                                window.location.href = 'add_child.html';
+                            }
+                        } else {
+                            showAlert(response.error || 'Login failed', 'danger');
+                        }
+                    },
+                    error: function(xhr) {
+                        const response = JSON.parse(xhr.responseText);
+                        showAlert(response.error || 'Login failed', 'danger');
+                    },
+                    complete: function() {
+                        setLoading('#loginBtn', false);
+                    }
+                });
+            });
+
+            // Register form submission
+            $('#registerForm').submit(function(e) {
+                e.preventDefault();
+                
+                const email = $('#regEmail').val();
+                const password = $('#regPassword').val();
+                const isParent = $('#isParent').val() === 'true';
+                const numberOfKids = $('#numberOfKids').val() || null;
+
+                if (!email || !password) {
+                    showAlert('Please fill in all required fields', 'danger');
+                    return;
+                }
+
+                setLoading('#registerBtn', true);
+
+                $.ajax({
+                    url: '/api/auth/register.php',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        email: email,
+                        password: password,
+                        is_parent: isParent,
+                        number_of_kids: numberOfKids
+                    }),
+                    success: function(response) {
+                        if (response.success) {
+                            showAlert('Registration successful! Please sign in.', 'success');
+                            $('#showLogin').click();
+                        } else {
+                            showAlert(response.error || 'Registration failed', 'danger');
+                        }
+                    },
+                    error: function(xhr) {
+                        const response = JSON.parse(xhr.responseText);
+                        showAlert(response.error || 'Registration failed', 'danger');
+                    },
+                    complete: function() {
+                        setLoading('#registerBtn', false);
+                    }
+                });
+            });
+        });
+
+        function showAlert(message, type) {
+            const alertHtml = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            `;
+            $('#alertContainer').html(alertHtml);
+        }
+
+        function setLoading(buttonId, isLoading) {
+            const $btn = $(buttonId);
+            const $loading = $btn.find('.loading');
+            const $text = $btn.find('.btn-text');
+
+            if (isLoading) {
+                $loading.show();
+                $text.hide();
+                $btn.prop('disabled', true);
+            } else {
+                $loading.hide();
+                $text.show();
+                $btn.prop('disabled', false);
+            }
+        }
+
+        function showChildSelection(children) {
+            let childSelectionHtml = `
+                <div class="text-center mb-3">
+                    <h4>Select a Child Profile</h4>
+                </div>
+                <div class="row">
+            `;
+
+            children.forEach((child, index) => {
+                const genderClass = child.kid_gender === 'female' ? 'border-pink' : 'border-blue';
+                childSelectionHtml += `
+                    <div class="col-6 mb-3">
+                        <div class="card child-card ${genderClass}" data-child-id="${child.id}" style="cursor: pointer; border: 3px solid ${child.kid_gender === 'female' ? '#ff69b4' : '#007bff'};">
+                            <img src="${child.kid_photo || 'images/default-child.png'}" class="card-img-top" alt="${child.kid_name}" style="height: 150px; object-fit: cover;">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">${child.kid_name}</h6>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            childSelectionHtml += `
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-outline-primary" onclick="window.location.href='add_child.html'">
+                        <i class="fas fa-plus"></i> Add New Child
+                    </button>
+                </div>
+            `;
+
+            $('#loginForm').html(childSelectionHtml);
+
+            // Add click handlers for child selection
+            $('.child-card').click(function() {
+                const childId = $(this).data('child-id');
+                window.location.href = `acceuil.html?kidId=${childId}`;
+            });
+        }
+    </script>
+</body>
+</html>

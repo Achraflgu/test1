@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            /*background: url('images/bg_male.png') center/cover no-repeat;  Replace with your image 
+            background-color: #007bff;*/
+        }
+
+        #games-container {
+            background-color: rgba(255, 255, 255, 0.4); /* Semi-transparent white container background */
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 50px;
+            animation: fadeIn 0.5s ease-in-out;
+            position: relative;
+            z-index: 1;
+        }
+    
+
+     
+
+        h2 {
+    color: #2ccf1efa;
+    font-family: 'Poppins', sans-serif;
+    animation: coolAnimation 2s ease-in-out infinite; /* Add animation property */
+    transform-origin: center; /* Set the transformation origin to the center */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Add a subtle text shadow */
+    
+}
+
+@keyframes coolAnimation {
+    0%, 100% {
+        transform: scale3d(1, 1, 1); /* Initial and final state */
+    }
+    50% {
+        transform: scale3d(1.2, 1.2, 1.2); /* Scale up in the middle of the animation */
+    }
+}
+        .mb-3 {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+
+        .row {
+            margin: 0 -15px;
+        }
+
+        .game-card {
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            background-color: #fff;
+            opacity: 0;
+        }
+
+        .game-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-inline {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        body.male-background {
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+                url(./images/bg_games_male.png) center bottom / cover no-repeat fixed; /* Fix the order of properties and adjust the background property */
+    width: 100%;
+    height: 100vh;
+    padding: 10px 8% 0; /* Remove bottom padding to eliminate the white border */
+    box-sizing: border-box; /* Ensure padding is included in the total height */
+    position: relative;
+    background-attachment: fixed; /* Add this property for fixed background attachment */
+}
+
+
+   
+   
+  
+
+    body.female-background {
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+                url(./images/bg_games_female3.png) fixed no-repeat center bottom; /* Add "fixed" to make the background fixed */
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+    padding: 10px 8% 0; /* Remove bottom padding to eliminate the white border */
+    box-sizing: border-box; /* Ensure padding is included in the total height */
+    background-attachment: fixed; /* Add this property for fixed background attachment */
+}
+        .game-card img {
+            height: 250px; /* Set your desired fixed height */
+        object-fit: cover; /* Ensure the image covers the specified height */
+        width: 100%; /* Ensure the image takes the full width of the container */
+        border-radius: 5px; /* Optional: Add border-radius for rounded corners */
+    }
+    .game-card{
+        max-height: 500px;
+    }
+    </style>
+</head>
+
+<body id="body-container">
+
+    <div id="background-container"></div>
+
+    <div id="games-container" class="container mt-5">
+        <h2 class="text-center mb-4">Explore Games</h2>
+
+        <!-- Category Filter -->
+        <div class="mb-3">
+            <label for="categoryFilter">Filter by Category:</label>
+            <select id="categoryFilter" class="form-control" onchange="filterByCategory()">
+                <option value="all">All</option>
+                <!-- Categories will be dynamically added here -->
+            </select>
+        </div>
+
+        <!-- Games List -->
+        <div id="games-list" class="row">
+            <!-- Games will be dynamically added here -->
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+    
+        function logHistoricalData(pageName, kidId, itemId, itemName, gameName) {
+            // Assuming you have the selectedKidId available
+            var selectedKidId = getParameterByName('kidId');
+            console.log('Selected Kid ID:', selectedKidId); // Log selected kid ID
+    
+            // Send an AJAX request to log historical data
+            $.ajax({
+                url: "log_history.php",
+                method: "POST",
+                data: {
+                    kidId: selectedKidId,
+                    pageName: pageName,
+                    itemId: itemId,
+                    itemName: itemName,
+                    gameName: gameName // Include gameName in the data
+                },
+                success: function (response) {
+                    // Handle success, if needed
+                    console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    // Handle error, if needed
+                    console.error(error);
+                }
+            });
+        }
+    
+        // Function to fetch and display games
+        function fetchGames(category) {
+            var selectedKidId = getParameterByName('kidId');
+            console.log('Selected Kid ID:', selectedKidId); // Log selected kid ID
+    
+            $.ajax({
+                type: 'GET',
+                url: 'get_games.php',
+                data: { category: category, kidId: selectedKidId },
+                success: function (response) {
+                    $('#games-list').html(response);
+    
+                    // Fade in game cards
+                    $('.game-card').each(function (index) {
+                        $(this).delay(100 * index).animate({ opacity: 1 }, 200);
+                    });
+    
+                    // Attach click event on each game
+                    $('.game-card').click(function () {
+                        var gameId = $(this).data('game-id');
+                        var gameName = $(this).find('.card-title').text();
+                        var pageName = 'games - <span style="font-weight: bold; font-family: Arial, sans-serif;">' + gameName + '</span>';
+                        logHistoricalData(pageName, selectedKidId, gameId, gameName);
+                        window.location.href = 'play_game.php?game_id=' + gameId + '&kid_id=' + selectedKidId; // Include 'kid_id' in the URL
+                    });
+    
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+    
+        // Function to filter games by category
+        function filterByCategory() {
+            var selectedCategory = $('#categoryFilter').val();
+            fetchGames(selectedCategory);
+        }
+    
+        // Function to fetch unique categories and populate the filter dropdown
+        function fetchCategories() {
+            $.ajax({
+                type: 'GET',
+                url: 'get_categories_games.php', // Replace with your server endpoint
+                success: function (categories) {
+                    // Populate the category filter dropdown
+                    var categoryFilter = $('#categoryFilter');
+                    categoryFilter.empty(); // Clear existing options
+                    categoryFilter.append('<option value="all">All</option>'); // Add the "All" option
+                    categories.forEach(function (category) {
+                        categoryFilter.append('<option value="' + category + '">' + category + '</option>');
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        function fetchKidGenreAndApplyBackgroundColor() {
+        var selectedKidId = getParameterByName('kidId');
+
+        $.ajax({
+    type: 'GET',
+    url: 'get_kid_genre.php',
+    data: { kidId: selectedKidId },
+    dataType: 'json', // Expect JSON response
+    success: function (response) {
+        if (response.hasOwnProperty('kidGenre')) {
+            var kidGenre = response.kidGenre.toLowerCase();
+            if (kidGenre === 'male') {
+                $('#body-container').addClass('male-background');
+            } else if (kidGenre === 'female') {
+                $('#body-container').addClass('female-background');
+            }
+        } else if (response.hasOwnProperty('error')) {
+            console.error(response.error);
+        }
+    },
+    error: function (xhr, status, error) {
+        console.error(xhr.responseText);
+    }
+});
+
+    }
+
+    // Initial fetch to set background color
+    fetchKidGenreAndApplyBackgroundColor();
+    
+        // Initial fetch to display all games and populate categories
+        fetchGames('all');
+        fetchCategories();
+    </script>
+    
+
+</body>
+
+</html>

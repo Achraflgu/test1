@@ -1,0 +1,20 @@
+{
+  "name": "children-universe",
+  "version": "1.0.0",
+  "description": "Children's educational platform with stories, games, and activities",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required for static files'",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@vercel/php": "^0.6.0"
+  },
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

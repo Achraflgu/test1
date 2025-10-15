@@ -1,0 +1,417 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500;700;800&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    #feature1 {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2)), url('./Assets/bg_seq_1111.png');
+        background-size: cover;
+        background-position: center;
+        animation: fadeIn 2s ease-out; /* Adjust the duration and easing as needed */
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    #feature2 {
+        background-image: linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.2)), url('./Assets/bg_seq_222.png');
+        background-size: cover;
+        background-position: center;
+    }
+    #feature3 {
+        background-image: linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.1)), url('./Assets/bg_seq_3.png');
+        background-size: cover;
+        background-position: center;
+    }
+    #feature4 {
+        background-image: linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.1)), url('./Assets/bg_seq_4.png');
+        background-size: cover;
+        background-position: center;
+    }
+    
+    #faq {
+        background-image: linear-gradient(rgba(255, 240, 214, 0.8), rgba(255, 240, 214, 0.8));
+        background-size: cover;
+        background-position: center;
+    }
+    
+}
+
+.header {
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)), url(./Assets/Mesa\ de\ trabajo\ 1.png);
+    background-size: cover;
+    background-position: center;
+    padding: 10px 8%;
+    position: relative;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+
+
+.logo {
+    width: 800px;
+    cursor: pointer;
+    position: absolute;
+    left: 47%;
+    top: 30%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.3s ease; /* Add a smooth transition effect */
+}
+
+.logo:hover {
+    transform: translate(-50%, -50%) rotate(5deg); /* Add a slight rotation on hover */
+}
+
+
+
+nav button {
+    border: none;
+    outline: none;
+    background-color: #db0001;
+    color: #fff;
+    padding: 7px 20px;
+    font-size: 12px;
+    border-radius: 4px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+
+.fa-globe {
+    color: #fff;
+    width: 10px;
+    margin-right: 10px;
+}
+
+
+.header-content {
+    position: absolute;
+    top: 60%; /* Updated to 50% to center vertically */
+    left: 48%; /* Updated to 50% to center horizontally */
+    transform: translate(-50%, -50%); /* Center both vertically and horizontally */
+    text-align: center; /* Center text within the container */
+    color: #4f0c3f;
+    font-family: 'coolguy', sans-serif;
+    font-size: 20px;
+}
+
+
+.header-content h1 {
+    font-size: 60px;
+    line-height: 70px;
+    font-weight: 600;
+    max-width: 650px;
+}
+
+.header-content h3 {
+    font-weight: 400;
+    margin-bottom: 20px;
+}
+
+.email-signup {
+    background: #fff;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+    overflow: hidden;
+}
+
+.email-signup input {
+    flex: 1;
+    border: 0;
+    outline: 0;
+    margin-left: 20px;
+}
+
+.email-signup button {
+    background-color: #4f0c3f;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 15px 30px;
+}
+
+
+.features {
+    font-family: 'coolguy', sans-serif; /* Change to your desired font family */
+    font-size: 15px; /* Change to your desired font size */
+    padding: 50px 12%;
+    font-size: 22px;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+    padding: 50px 0;
+}
+
+.text-col, .img-col {
+    color: #4f0c3f;
+    font-family: 'coolguy', sans-serif; /* Change to your desired font family */
+    font-size: 15px; /* Change to your desired font size */
+    flex-basis: 50%;
+    margin-bottom: 20px;
+}
+
+.features {
+    margin-bottom: -5px;
+    padding-top: 50px; /* Adjust the top padding to move features higher */
+
+    .row {
+        display: flex;
+        align-items: flex-start; /* Align items to the start (top) */
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    
+
+
+    .img-col img {
+        
+        height: 300px;
+        object-fit: cover;
+        transition: transform 0.3s ease-in-out;
+        border-radius: 5px;
+        position: relative;
+        left: 30%; /* Adjust the left property to move it to the right */
+    }
+    
+  
+    
+    .img-col:hover img {
+        transform: scale(1.1);
+    }
+
+    h2 {
+        margin-bottom: 100px; /* Increase bottom margin to move it more to the bottom */
+        margin-right: 50px; /* Increase right margin to move it more to the right */
+        color: #4f0c3f;
+        font-size: 24px; /* Increase font size for headings */
+    }
+    
+
+    p {
+        color: #666;
+    }
+}
+
+
+.features h2 {
+    font-size: 50px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.faq {
+    padding: 10px 12%;
+    text-align: center;
+    font-size: 18px;
+}
+
+.faq h2 {
+    font-size: 40px;
+    font-weight: 500;
+}
+
+.accordion {
+    margin: 60px auto;
+    width: 100%;
+    max-width: 750px;
+}
+
+.accordion li {
+    list-style: none;
+    width: 100%;
+    padding: 5px;
+}
+
+.accordion li label {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 500;
+    background-color: #fff;
+    color: #4f0c3f;
+    margin-bottom: 2px;
+    cursor: pointer;
+    position: relative;
+}
+
+label::after {
+    content: '+';
+    font-size: 34px;
+    position: absolute;
+    right: 20px;
+    transition: transform 0.5s;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+.accordion .content {
+    background-color: #fff;
+    color: #4f0c3f;
+    text-align: left;
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s, padding 0.5s;
+}
+
+.accordion input[type="radio"]:checked + label + .content {
+    max-height: 600px;
+    padding: 30px 20px;
+}
+
+
+.accordion input[type="radio"]:checked + label::after {
+    transform: rotate(135deg);
+}
+
+.faq small {
+    font-size: 13px;
+}
+
+.faq .email-signup {
+    max-width: 600px;
+    margin: 20px auto 60px;
+}
+
+
+.footer {
+    padding: 50px 15% 10px;
+    border-top: 6px solid #333;
+    color: #777;
+}
+
+.footer h2 {
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 30px;
+}
+
+.footer .col {
+    flex-basis: 25%;
+    flex-grow: 1;
+    margin-bottom: 20px;
+}
+
+.footer .col a {
+    display: block;
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+
+.footer .row {
+    align-items: flex-start;
+    padding: 10px 0px;
+}
+
+.footer .lang-btn {
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 3px;
+}
+
+.copyright-text {
+    font-size: 14px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+
+
+@media only screen and (max-width: 600px) {
+    .logo {
+        width: 100px;
+    }
+
+    nav button {
+        padding: 5px 10px;
+    }
+
+    nav .lang-btn {
+        padding: 4px 8px;
+    }
+
+    .header-content {
+        position: unset;
+        transform: none;
+        padding-top: 150px;
+    }
+
+    .header-content h1 {
+        font-size: 30px;
+    }
+
+    .email-signup button {
+        background-color: #4f0c3f;
+        font-size: 12px;
+        padding: 10px 15px;
+    }
+
+    .text-col, .img-col {
+        flex-basis: 100%;
+    }
+
+    .features h2 {
+        font-size: 30px;
+    }
+
+    .features p {
+        font-size: 15px;
+    }
+
+    .row:nth-child(2), .row:nth-child(4) {
+        flex-direction: column-reverse;
+    }
+
+    .features .row {
+        padding: 10px 0;
+    }
+
+    .faq h2 {
+        font-size: 20px;
+    }
+
+    .accordion .content {
+        font-size: 14px;
+    }
+
+    .accordion li label {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    label::after {
+        font-size: 22px;
+    }
+}

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/391827d54c.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/ScrollMagic.min.js"></script>
+    <link rel="shortcut icon" href="images/logo_1.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <title>Your Children's Universe - Watch, Play, Learn</title>
+</head>
+<style>
+.back-to-top-btn {
+    display: block;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4f0c3f;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0; /* Initially hidden */
+    pointer-events: none; /* Disable clicks when hidden */
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.back-to-top-btn:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+.signin-btn {
+    position: absolute;
+    top: 5%;
+    right: 5%; /* Adjust as needed */
+    border: none;
+    outline: none;
+    background-color: #db0001;
+    color: #fff;
+    padding: 7px 20px;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.signin-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+
+
+
+    .signin-btn {
+        border: none;
+        outline: none;
+        background-color: #4f0c3f;
+        color: #fff;
+        padding: 7px 20px;
+        font-size: 12px;
+        border-radius: 4px;
+        margin-left: 10px;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .signin-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .animated {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+<body>
+    <div class="header animated" id="header">
+        <nav>
+            <img class="logo" src="./Assets/logo 1.png" alt="logo">
+            <div>
+               
+                <button class="signin-btn" onclick="window.location.href='login.html'">Sign In</button>
+            </div>            
+        </nav>
+
+        <div class="header-content">
+            <div class="texte-col">
+            <h2>Unlimited stories, activities, and fun for young minds.</h2>
+            <p>Watch, play, and learn in a safe, magical environment</p>
+        </div>
+        <div class="mail-col">
+            <form action="login.html" method="GET" class="email-signup">
+                <input type="email" name="email" placeholder="Email address" required>
+                <button type="submit">Get Started</button>
+            </form>
+        </div>
+    </div>
+    </div>
+
+    <div class="features animated" id="feature1">
+        <div class="row">
+            <div class="text-col">
+                <h2>Explore imaginative worlds.</h2>
+                <p>Watch on smart TVs, tablets, and more - Dive into magical stories and creative activities.</p>
+            </div>
+            <div class="img-col">
+                <img src="./Assets/Fichier 1.png" alt="feature-1">
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="features animated" id="feature2">
+        <div class="row">
+            <div class="img-col">
+                <img src="./Assets/Fichier 2.png" alt="feature-2">
+            </div>
+            <div class="text-col">
+                <h2>Download activities for offline fun.</h2>
+                <p>Save your favorites and always have something entertaining to play and learn.</p>
+            </div>
+        </div>
+    </div>
+    
+    
+
+    <div class="faq animated" id="faq">
+        <h2>Frequently Asked Questions for Parents</h2>
+
+        <ul class="accordion">
+            <li>
+                <input type="radio" name="accordion" id="first">
+                <label for="first">What is Your Children's Universe?</label>
+                <div class="content">
+                    <p>Your Children's Universe is a magical place where kids can explore wonderful stories, creative activities, and have fun learning experiences.</p>
+                </div>
+            </li>
+            <li>
+                <input type="radio" name="accordion" id="second">
+                <label for="second">How much does it cost?</label>
+                <div class="content">
+                    <p>Your Children's Universe is available for a fixed monthly fee. Plans range from ₹ 149 to ₹ 649 a month.</p>
+                </div>
+            </li>
+            <li>
+                <input type="radio" name="accordion" id="third">
+                <label for="third">Where can I access it?</label>
+                <div class="content">
+                    <p>You can access Your Children's Universe on various devices, including smart TVs, tablets, smartphones, and more.</p>
+                </div>
+            </li>
+            <li>
+                <input type="radio" name="accordion" id="fourth">
+                <label for="fourth">How do I cancel?</label>
+                <div class="content">
+                    <p>Cancelling Your Children's Universe is easy. No contracts, no fees - start or stop your membership anytime.</p>
+                </div>
+            </li>
+            <li>
+                <input type="radio" name="accordion" id="fifth">
+                <label for="fifth">What content is available?</label>
+                <div class="content">
+                    <p>Your Children's Universe offers a vast library of stories, activities, and learning experiences for children.</p>
+                </div>
+            </li>
+            <li>
+                <input type="radio" name="accordion" id="sixth">
+                <label for="sixth">Is it safe for kids?</label>
+                <div class="content">
+                    <p>Your Children's Universe is designed with safety in mind. Parental controls allow you to customize the experience for your child.</p>
+                </div>
+            </li>
+        </ul>
+
+        <small>Ready for the adventure? Enter your email to start exploring.</small>
+
+       
+    </div>
+
+    <div class="footer animated" id="footer">
+        <h2>Questions? Call admin he will help</h2>
+
+        <div class="row">
+            <div class="col">
+                <a href="#">FAQ</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Contact Us</a>
+            </div>
+            <div class="col">
+                <a href="#">Help Center</a>
+                <a href="#">Jobs</a>
+                <a href="#">Legal Notices</a>
+            </div>
+            <div class="col">
+                <a href="#">Account</a>
+                <a href="#">Ways to Access</a>
+                <a href="#">Corporate Information</a>
+                <a href="#">Only on Your Children's Universe</a>
+            </div>
+            <div class="col">
+                <a href="#">Media Center</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Contact Us</a>
+            </div>
+        </div>
+
+        
+
+        <p class="copyright-text">Your Children's Universe</p>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var controller = new ScrollMagic.Controller();
+
+        function createScene(id) {
+            return new ScrollMagic.Scene({
+                triggerElement: id,
+                triggerHook: 0.8,
+                reverse: true,
+            })
+            .setClassToggle(id, "reveal")
+            .addTo(controller);
+        }
+
+        function createScrollScenes() {
+            createScene("#header");
+            createScene("#feature1");
+            createScene("#feature2");
+            createScene("#feature3");
+            createScene("#feature4");
+            createScene("#faq");
+            createScene("#footer");
+        }
+
+        createScrollScenes();
+
+        // Smooth scroll on internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Handle scroll up animation
+        var scrollUpScenes = [];
+        var isScrollingUp = false;
+
+        function handleScrollDirection(event) {
+            var scrollDirection = event.deltaY > 0 ? "down" : "up";
+            if (isScrollingUp && scrollDirection === "down") {
+                isScrollingUp = false;
+                createScrollScenes(); // Recreate scroll down scenes
+            } else if (!isScrollingUp && scrollDirection === "up") {
+                isScrollingUp = true;
+                destroyScrollScenes(); // Destroy scroll down scenes
+            }
+        }
+
+        function destroyScrollScenes() {
+            scrollUpScenes.forEach(scene => scene.destroy());
+            scrollUpScenes = [];
+        }
+
+        document.addEventListener("wheel", handleScrollDirection);
+    });
+</script>
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+    var backToTopBtn = document.getElementById("backToTopBtn");
+
+    function handleScroll() {
+        var scrollPosition = window.scrollY || document.documentElement.scrollTop;
+
+        // Adjust the offset value as needed
+        var offset = 200;
+
+        if (scrollPosition > offset) {
+        backToTopBtn.style.opacity = "1";
+        backToTopBtn.style.pointerEvents = "auto";
+    } else {
+        backToTopBtn.style.opacity = "0";
+        backToTopBtn.style.pointerEvents = "none";
+    }
+    }
+
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+    // Listen for scroll events
+    window.addEventListener("scroll", handleScroll);
+
+    // Smooth scroll on internal links (including back-to-top button)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            var targetId = this.getAttribute('href').substring(1);
+            var targetElement = document.getElementById(targetId);
+
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Add this line to handle the back-to-top button click
+    backToTopBtn.addEventListener("click", scrollToTop);
+});
+
+</script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("getStartedButton").addEventListener("click", function () {
+                // Redirect to login.html with the email parameter
+                var email = document.getElementById("emailInput").value;
+                window.location.href = "login.html?email=" + encodeURIComponent(email);
+            });
+        });
+    </script>
+
+<button id="backToTopBtn" class="back-to-top-btn" onclick="scrollToTop()">
+    <i class="fa-solid fa-arrow-up"></i> 
+</button>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Child Profile - Children's Universe</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="shortcut icon" href="images/logo_1.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('images/bg_login_1.png');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo img {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            font-size: 16px;
+        }
+
+        .form-control:focus {
+            border-color: #4f0c3f;
+            box-shadow: 0 0 0 0.2rem rgba(79, 12, 63, 0.25);
+        }
+
+        .btn-primary {
+            background-color: #4f0c3f;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #3a0a2f;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .alert {
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .loading {
+            display: none;
+        }
+
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .photo-preview {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 10px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="logo">
+            <img src="./images/logo_1.png" alt="Children's Universe Logo">
+        </div>
+
+        <h2 class="text-center mb-4">Add Child Profile</h2>
+
+        <div id="alertContainer"></div>
+
+        <form id="addChildForm">
+            <div class="form-group">
+                <label for="kidName">Child's Name *</label>
+                <input type="text" class="form-control" id="kidName" name="kid_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="kidGender">Gender *</label>
+                <select class="form-control" id="kidGender" name="kid_gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="kidAge">Age *</label>
+                <input type="number" class="form-control" id="kidAge" name="kid_age" min="3" max="6" required>
+            </div>
+
+            <div class="form-group">
+                <label for="kidPhoto">Photo (Optional)</label>
+                <input type="file" class="form-control-file" id="kidPhoto" name="kid_photo" accept="image/*" onchange="previewPhoto()">
+                <img id="photoPreview" class="photo-preview" alt="Photo Preview">
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <span class="loading spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span class="btn-text">Add Child Profile</span>
+                </button>
+            </div>
+
+            <div class="form-group">
+                <button type="button" class="btn btn-secondary" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Check if user is logged in
+            const user = sessionStorage.getItem('user');
+            if (!user) {
+                window.location.href = 'login_new.html';
+                return;
+            }
+
+            const userData = JSON.parse(user);
+
+            // Form submission
+            $('#addChildForm').submit(function(e) {
+                e.preventDefault();
+                
+                const kidName = $('#kidName').val();
+                const kidGender = $('#kidGender').val();
+                const kidAge = $('#kidAge').val();
+                const kidPhoto = $('#kidPhoto')[0].files[0];
+
+                if (!kidName || !kidGender || !kidAge) {
+                    showAlert('Please fill in all required fields', 'danger');
+                    return;
+                }
+
+                if (kidAge < 3 || kidAge > 6) {
+                    showAlert('Age must be between 3 and 6', 'danger');
+                    return;
+                }
+
+                setLoading('#submitBtn', true);
+
+                // For now, we'll use a placeholder photo URL
+                // In a real application, you'd upload the photo to a service like Cloudinary
+                const photoUrl = kidPhoto ? 'images/default-child.png' : 'images/default-child.png';
+
+                $.ajax({
+                    url: '/api/children/add.php',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        user_id: userData.id,
+                        kid_name: kidName,
+                        kid_gender: kidGender,
+                        kid_age: parseInt(kidAge),
+                        kid_photo: photoUrl
+                    }),
+                    success: function(response) {
+                        if (response.success) {
+                            showAlert('Child profile added successfully!', 'success');
+                            setTimeout(() => {
+                                window.location.href = 'acceuil_new.html?kidId=' + response.child_id;
+                            }, 1500);
+                        } else {
+                            showAlert(response.error || 'Failed to add child profile', 'danger');
+                        }
+                    },
+                    error: function(xhr) {
+                        const response = JSON.parse(xhr.responseText);
+                        showAlert(response.error || 'Failed to add child profile', 'danger');
+                    },
+                    complete: function() {
+                        setLoading('#submitBtn', false);
+                    }
+                });
+            });
+        });
+
+        function previewPhoto() {
+            const file = document.getElementById('kidPhoto').files[0];
+            const preview = document.getElementById('photoPreview');
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertHtml = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            `;
+            $('#alertContainer').html(alertHtml);
+        }
+
+        function setLoading(buttonId, isLoading) {
+            const $btn = $(buttonId);
+            const $loading = $btn.find('.loading');
+            const $text = $btn.find('.btn-text');
+
+            if (isLoading) {
+                $loading.show();
+                $text.hide();
+                $btn.prop('disabled', true);
+            } else {
+                $loading.hide();
+                $text.show();
+                $btn.prop('disabled', false);
+            }
+        }
+
+        function goBack() {
+            const children = JSON.parse(sessionStorage.getItem('children') || '[]');
+            if (children.length > 0) {
+                window.location.href = 'acceuil_new.html?kidId=' + children[0].id;
+            } else {
+                window.location.href = 'login_new.html';
+            }
+        }
+    </script>
+</body>
+</html>

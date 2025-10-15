@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>About Us | CoolKids</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: 0.5s;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f1f1f1;
+            text-align: center;
+            padding: 20px;
+        }
+        body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+                url('./images/bg_login_1.png') no-repeat center center fixed;
+                background-size: cover;
+            background-position: center;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+    text-align: center;
+            padding: 20px;
+    }
+
+    img {
+    width: 300px; /* Increase the width to make the image larger */
+    border-radius: 50%;
+    margin-top: 20px;
+}
+
+
+        h1 {
+            font-size: 48px;
+            padding-top: 20px;
+            font-family: 'Fredoka One', cursive;
+            color: #333;
+        }
+
+        p {
+            line-height: 1.5;
+            font-size: 18px;
+            color: #555;
+            margin-top: 20px;
+        }
+
+        .icon ion-icon {
+            font-size: 30px;
+            padding: 15px;
+            color: #f44336;
+            border-radius: 50%;
+            background-color: #dcd4d4ad;
+            margin: 20px 10px;
+            cursor: pointer;
+        }
+
+        .icon ion-icon:hover {
+            background-color: #f44336;
+            color: #fff;
+        }
+
+        .btn,
+        .btn2 {
+            width: 250px;
+            height: 55px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+            margin-top: 20px;
+            display: inline-block;
+            text-decoration: none;
+            line-height: 55px;
+        }
+
+        .btn {
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            margin-right: 10px;
+        }
+
+        .btn2 {
+            background-color: transparent;
+            border: 2px solid #f44336;
+            color: #f44336;
+        }
+
+        .btn2:hover {
+            background-color: #f44336;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="images/logo_1.png" alt="CoolKids Logo">
+    <h1>About CoolKids</h1>
+    <p>Welcome to our COOLKIDS' website! Dive into a world of exciting stories, cool games, and awesome activities.
+        We've got something for everyone with lots of options to choose from. Let imaginations soar with our colorful
+        stories or challenge young minds with interactive games. From drawing to puzzles, there's always something new
+        and exciting to discover. Join us for a playtime full of laughter and learning!</p>
+    <div class="icon">
+        <ion-icon name="logo-facebook"></ion-icon>
+        <ion-icon name="logo-instagram"></ion-icon>
+        <ion-icon name="logo-twitter"></ion-icon>
+    </div>
+    <a class="btn" href="mailto:support@coolkids.com">support@coolkids.com.</a>
+    <button class="btn2" onclick="goBack()">Go Back</button>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script>
+        function goBack() {
+            alert("Thank you for visiting! Please close this tab manually.");
+        }
+    </script>
+</body>
+
+</html>

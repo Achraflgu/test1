@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Children's Universe</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="shortcut icon" href="images/logo_1.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('images/bg-admin.png');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .admin-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .stats-card h3 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-card p {
+            margin-bottom: 0;
+            font-size: 1.1rem;
+        }
+
+        .btn-admin {
+            background-color: #4f0c3f;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-admin:hover {
+            background-color: #3a0a2f;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .btn-logout {
+            background-color: #dc3545;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-logout:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-item {
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .content-item:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .content-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            float: left;
+            margin-right: 1rem;
+        }
+
+        .content-item h5 {
+            margin-top: 0;
+            color: #4f0c3f;
+        }
+
+        .content-item p {
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #6c757d;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="admin-container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-crown"></i> Admin Panel</h1>
+                    <p class="lead">Manage Children's Universe Content</p>
+                </div>
+                <div class="col-md-4 text-right">
+                    <button class="btn btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="row" id="statsRow">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <h3 id="usersCount">-</h3>
+                    <p>Total Users</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <h3 id="childrenCount">-</h3>
+                    <p>Children Profiles</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <h3 id="storiesCount">-</h3>
+                    <p>Stories</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <h3 id="gamesCount">-</h3>
+                    <p>Games</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Management -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="content-section">
+                    <h3><i class="fas fa-book"></i> Stories Management</h3>
+                    <div class="text-center mb-3">
+                        <button class="btn btn-admin" onclick="loadStories()">
+                            <i class="fas fa-refresh"></i> Refresh Stories
+                        </button>
+                        <button class="btn btn-admin" onclick="addNewStory()">
+                            <i class="fas fa-plus"></i> Add Story
+                        </button>
+                    </div>
+                    <div id="storiesList">
+                        <div class="loading">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <p>Loading stories...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="content-section">
+                    <h3><i class="fas fa-gamepad"></i> Games Management</h3>
+                    <div class="text-center mb-3">
+                        <button class="btn btn-admin" onclick="loadGames()">
+                            <i class="fas fa-refresh"></i> Refresh Games
+                        </button>
+                        <button class="btn btn-admin" onclick="addNewGame()">
+                            <i class="fas fa-plus"></i> Add Game
+                        </button>
+                    </div>
+                    <div id="gamesList">
+                        <div class="loading">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <p>Loading games...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="content-section">
+                    <h3><i class="fas fa-cubes"></i> Activities Management</h3>
+                    <div class="text-center mb-3">
+                        <button class="btn btn-admin" onclick="loadActivities()">
+                            <i class="fas fa-refresh"></i> Refresh Activities
+                        </button>
+                        <button class="btn btn-admin" onclick="addNewActivity()">
+                            <i class="fas fa-plus"></i> Add Activity
+                        </button>
+                    </div>
+                    <div id="activitiesList">
+                        <div class="loading">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <p>Loading activities...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="content-section">
+                    <h3><i class="fas fa-users"></i> User Management</h3>
+                    <div class="text-center mb-3">
+                        <button class="btn btn-admin" onclick="loadUsers()">
+                            <i class="fas fa-refresh"></i> Refresh Users
+                        </button>
+                    </div>
+                    <div id="usersList">
+                        <div class="loading">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <p>Loading users...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Check if user is admin
+            const user = sessionStorage.getItem('user');
+            if (!user) {
+                window.location.href = 'login_new.html';
+                return;
+            }
+
+            const userData = JSON.parse(user);
+            if (!userData.isadmin) {
+                window.location.href = 'login_new.html';
+                return;
+            }
+
+            // Load initial data
+            loadStats();
+            loadStories();
+            loadGames();
+            loadActivities();
+            loadUsers();
+        });
+
+        function loadStats() {
+            // This would typically come from an API endpoint
+            // For now, we'll show placeholder data
+            $('#usersCount').text('0');
+            $('#childrenCount').text('0');
+            $('#storiesCount').text('0');
+            $('#gamesCount').text('0');
+        }
+
+        function loadStories() {
+            $('#storiesList').html('<div class="loading"><div class="spinner-border" role="status"></div><p>Loading stories...</p></div>');
+            
+            $.ajax({
+                url: '/api/content/stories.php?limit=10',
+                method: 'GET',
+                success: function(response) {
+                    if (response.success) {
+                        renderContentList('storiesList', response.stories, 'story');
+                    } else {
+                        $('#storiesList').html('<p class="text-center text-muted">No stories found</p>');
+                    }
+                },
+                error: function() {
+                    $('#storiesList').html('<p class="text-center text-danger">Failed to load stories</p>');
+                }
+            });
+        }
+
+        function loadGames() {
+            $('#gamesList').html('<div class="loading"><div class="spinner-border" role="status"></div><p>Loading games...</p></div>');
+            
+            $.ajax({
+                url: '/api/content/games.php?limit=10',
+                method: 'GET',
+                success: function(response) {
+                    if (response.success) {
+                        renderContentList('gamesList', response.games, 'game');
+                    } else {
+                        $('#gamesList').html('<p class="text-center text-muted">No games found</p>');
+                    }
+                },
+                error: function() {
+                    $('#gamesList').html('<p class="text-center text-danger">Failed to load games</p>');
+                }
+            });
+        }
+
+        function loadActivities() {
+            $('#activitiesList').html('<div class="loading"><div class="spinner-border" role="status"></div><p>Loading activities...</p></div>');
+            
+            $.ajax({
+                url: '/api/content/activities.php?limit=10',
+                method: 'GET',
+                success: function(response) {
+                    if (response.success) {
+                        renderContentList('activitiesList', response.activities, 'activity');
+                    } else {
+                        $('#activitiesList').html('<p class="text-center text-muted">No activities found</p>');
+                    }
+                },
+                error: function() {
+                    $('#activitiesList').html('<p class="text-center text-danger">Failed to load activities</p>');
+                }
+            });
+        }
+
+        function loadUsers() {
+            $('#usersList').html('<div class="loading"><div class="spinner-border" role="status"></div><p>Loading users...</p></div>');
+            
+            // This would typically come from an API endpoint
+            // For now, show placeholder
+            $('#usersList').html('<p class="text-center text-muted">User management coming soon</p>');
+        }
+
+        function renderContentList(containerId, items, type) {
+            const container = $(`#${containerId}`);
+            container.empty();
+
+            if (items.length === 0) {
+                container.html('<p class="text-center text-muted">No items found</p>');
+                return;
+            }
+
+            items.forEach(item => {
+                const itemHtml = `
+                    <div class="content-item">
+                        <img src="${item.photo || 'images/default-content.png'}" alt="${item[`${type}_title`] || item.title}">
+                        <h5>${item[`${type}_title`] || item.title}</h5>
+                        <p><strong>Category:</strong> ${item.category || 'N/A'}</p>
+                        <p><strong>Description:</strong> ${(item.description || '').substring(0, 100)}...</p>
+                        <div class="text-right">
+                            <button class="btn btn-sm btn-admin" onclick="edit${type.charAt(0).toUpperCase() + type.slice(1)}(${item.id})">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="delete${type.charAt(0).toUpperCase() + type.slice(1)}(${item.id})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.append(itemHtml);
+            });
+        }
+
+        function addNewStory() {
+            alert('Add new story functionality coming soon!');
+        }
+
+        function addNewGame() {
+            alert('Add new game functionality coming soon!');
+        }
+
+        function addNewActivity() {
+            alert('Add new activity functionality coming soon!');
+        }
+
+        function editStory(id) {
+            alert(`Edit story ${id} functionality coming soon!`);
+        }
+
+        function editGame(id) {
+            alert(`Edit game ${id} functionality coming soon!`);
+        }
+
+        function editActivity(id) {
+            alert(`Edit activity ${id} functionality coming soon!`);
+        }
+
+        function deleteStory(id) {
+            if (confirm('Are you sure you want to delete this story?')) {
+                alert(`Delete story ${id} functionality coming soon!`);
+            }
+        }
+
+        function deleteGame(id) {
+            if (confirm('Are you sure you want to delete this game?')) {
+                alert(`Delete game ${id} functionality coming soon!`);
+            }
+        }
+
+        function deleteActivity(id) {
+            if (confirm('Are you sure you want to delete this activity?')) {
+                alert(`Delete activity ${id} functionality coming soon!`);
+            }
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'login_new.html';
+        }
+    </script>
+</body>
+</html>

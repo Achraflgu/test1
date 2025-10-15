@@ -91,7 +91,7 @@
             <img class="logo" src="./Assets/logo 1.png" alt="logo">
             <div>
                
-                <button class="signin-btn" onclick="window.location.href='login.html'">Sign In</button>
+                <button class="signin-btn" onclick="window.location.href='login_new.html'">Sign In</button>
             </div>            
         </nav>
 
@@ -101,7 +101,7 @@
             <p>Watch, play, and learn in a safe, magical environment</p>
         </div>
         <div class="mail-col">
-            <form action="login.html" method="GET" class="email-signup">
+            <form action="login_new.html" method="GET" class="email-signup">
                 <input type="email" name="email" placeholder="Email address" required>
                 <button type="submit">Get Started</button>
             </form>
@@ -336,7 +336,7 @@
             document.getElementById("getStartedButton").addEventListener("click", function () {
                 // Redirect to login.html with the email parameter
                 var email = document.getElementById("emailInput").value;
-                window.location.href = "login.html?email=" + encodeURIComponent(email);
+                window.location.href = "login_new.html?email=" + encodeURIComponent(email);
             });
         });
     </script>

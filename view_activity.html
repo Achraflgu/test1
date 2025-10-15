@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Activity - Children's Universe</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .activity-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .activity-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        .btn-back {
+            background-color: #4f0c3f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        .btn-back:hover {
+            background-color: #3a0a2f;
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="activity-container">
+        <a href="acceuil_new.html" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+        
+        <div id="activityContent">
+            <div class="text-center">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <p>Loading activity...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const activityId = urlParams.get('activity_id');
+            const kidId = urlParams.get('kid_id');
+
+            if (!activityId) {
+                $('#activityContent').html('<div class="alert alert-danger">Activity ID not provided</div>');
+                return;
+            }
+
+            // Load activity details
+            $.ajax({
+                url: '/api/content/activities',
+                method: 'GET',
+                data: { kid_id: kidId, limit: 100 },
+                success: function(response) {
+                    if (response.success) {
+                        const activity = response.activities.find(a => a.id == activityId);
+                        if (activity) {
+                            displayActivity(activity);
+                        } else {
+                            $('#activityContent').html('<div class="alert alert-warning">Activity not found</div>');
+                        }
+                    } else {
+                        $('#activityContent').html('<div class="alert alert-danger">Failed to load activity</div>');
+                    }
+                },
+                error: function() {
+                    $('#activityContent').html('<div class="alert alert-danger">Error loading activity</div>');
+                }
+            });
+        });
+
+        function displayActivity(activity) {
+            const html = `
+                <img src="${activity.photo}" alt="${activity.activity_title}" class="activity-image">
+                <h1>${activity.activity_title}</h1>
+                <p class="lead">${activity.description}</p>
+                ${activity.link_of_activities ? `
+                    <div class="text-center mt-4">
+                        <a href="${activity.link_of_activities}" target="_blank" class="btn btn-primary btn-lg">
+                            <i class="fas fa-play"></i> Start Activity
+                        </a>
+                    </div>
+                ` : ''}
+            `;
+            $('#activityContent').html(html);
+        }
+    </script>
+</body>
+</html>

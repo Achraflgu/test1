@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Story - Children's Universe</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .story-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .story-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        .btn-back {
+            background-color: #4f0c3f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        .btn-back:hover {
+            background-color: #3a0a2f;
+            color: white;
+            text-decoration: none;
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            margin: 1rem 0;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="story-container">
+        <a href="acceuil_new.html" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+        
+        <div id="storyContent">
+            <div class="text-center">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <p>Loading story...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const storyId = urlParams.get('story_id');
+            const kidId = urlParams.get('kid_id');
+
+            if (!storyId) {
+                $('#storyContent').html('<div class="alert alert-danger">Story ID not provided</div>');
+                return;
+            }
+
+            // Load story details
+            $.ajax({
+                url: '/api/content/stories',
+                method: 'GET',
+                data: { kid_id: kidId, limit: 100 },
+                success: function(response) {
+                    if (response.success) {
+                        const story = response.stories.find(s => s.id == storyId);
+                        if (story) {
+                            displayStory(story);
+                        } else {
+                            $('#storyContent').html('<div class="alert alert-warning">Story not found</div>');
+                        }
+                    } else {
+                        $('#storyContent').html('<div class="alert alert-danger">Failed to load story</div>');
+                    }
+                },
+                error: function() {
+                    $('#storyContent').html('<div class="alert alert-danger">Error loading story</div>');
+                }
+            });
+        });
+
+        function displayStory(story) {
+            const html = `
+                <img src="${story.photo}" alt="${story.story_title}" class="story-image">
+                <h1>${story.story_title}</h1>
+                <p class="lead">${story.description}</p>
+                ${story.link_of_stories ? `
+                    <div class="video-container">
+                        <iframe src="${story.link_of_stories}" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                ` : ''}
+            `;
+            $('#storyContent').html(html);
+        }
+    </script>
+</body>
+</html>

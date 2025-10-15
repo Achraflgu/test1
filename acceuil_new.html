@@ -277,7 +277,7 @@
         function loadChildData() {
             // Get child data from API
             $.ajax({
-                url: `/api/children/get.php?kid_id=${selectedKidId}`,
+                url: `/api/children/get?kid_id=${selectedKidId}`,
                 method: 'GET',
                 success: function(response) {
                     if (response.success && response.child) {
@@ -326,7 +326,7 @@
         function loadStories() {
             return new Promise((resolve, reject) => {
                 $.ajax({
-                    url: `/api/content/stories.php?kid_id=${selectedKidId}&limit=5`,
+                    url: `/api/content/stories?kid_id=${selectedKidId}&limit=5`,
                     method: 'GET',
                     success: function(response) {
                         if (response.success) {
@@ -345,7 +345,7 @@
         function loadGames() {
             return new Promise((resolve, reject) => {
                 $.ajax({
-                    url: `/api/content/games.php?kid_id=${selectedKidId}&limit=5`,
+                    url: `/api/content/games?kid_id=${selectedKidId}&limit=5`,
                     method: 'GET',
                     success: function(response) {
                         if (response.success) {
@@ -364,7 +364,7 @@
         function loadActivities() {
             return new Promise((resolve, reject) => {
                 $.ajax({
-                    url: `/api/content/activities.php?kid_id=${selectedKidId}&limit=5`,
+                    url: `/api/content/activities?kid_id=${selectedKidId}&limit=5`,
                     method: 'GET',
                     success: function(response) {
                         if (response.success) {

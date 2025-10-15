@@ -211,7 +211,7 @@
                 setLoading('#loginBtn', true);
 
                 $.ajax({
-                    url: '/api/auth/login.php',
+                    url: '/api/auth/login',
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -264,7 +264,7 @@
                 setLoading('#registerBtn', true);
 
                 $.ajax({
-                    url: '/api/auth/register.php',
+                    url: '/api/auth/register',
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({

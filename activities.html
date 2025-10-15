@@ -190,7 +190,7 @@
     
             $.ajax({
                 type: 'GET',
-                url: 'get_activities.php', // Replace with your server endpoint
+                url: '/api/content/activities', // New API endpoint
                 data: { category: category, kidId: selectedKidId },
                 success: function (response) {
                     $('#activities-list').html(response);
@@ -206,7 +206,7 @@
                         var activityName = $(this).find('.card-title').text();
                         var pageName = 'activities - <span style="font-weight: bold; font-family: Arial, sans-serif;">' + activityName + '</span>';
                         logHistoricalData(pageName, selectedKidId, activityId, activityName);
-                        window.location.href = 'view_activity.php?activity_id=' + activityId + '&kid_id=' + selectedKidId;
+                        window.location.href = 'view_activity.html?activity_id=' + activityId + '&kid_id=' + selectedKidId;
                     });
                 },
                 error: function (xhr, status, error) {
@@ -225,7 +225,7 @@
         function fetchCategories() {
             $.ajax({
                 type: 'GET',
-                url: 'get_categories_activities.php', // Replace with your server endpoint
+                url: '/api/content/activities', // New API endpoint
                 success: function (categories) {
                     // Populate the category filter dropdown
                     var categoryFilter = $('#categoryFilter');

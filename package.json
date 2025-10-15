@@ -9,7 +9,7 @@
     "deploy": "vercel --prod"
   },
   "dependencies": {
-    "@vercel/php": "^0.6.0"
+    "@vercel/postgres": "^0.5.0"
   },
   "devDependencies": {
     "vercel": "^32.0.0"

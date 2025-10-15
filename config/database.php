@@ -9,12 +9,12 @@ class Database {
     private $conn;
 
     public function __construct() {
-        // Get environment variables from Vercel
-        $this->host = $_ENV['DB_HOST'] ?? 'localhost';
-        $this->db_name = $_ENV['DB_NAME'] ?? 'children_universe';
-        $this->username = $_ENV['DB_USER'] ?? 'postgres';
-        $this->password = $_ENV['DB_PASS'] ?? '';
-        $this->port = $_ENV['DB_PORT'] ?? '5432';
+        // Get environment variables from Railway/Neon
+        $this->host = $_ENV['DB_HOST'] ?? $_ENV['PGHOST'] ?? 'localhost';
+        $this->db_name = $_ENV['DB_NAME'] ?? $_ENV['PGDATABASE'] ?? 'children_universe';
+        $this->username = $_ENV['DB_USER'] ?? $_ENV['PGUSER'] ?? 'postgres';
+        $this->password = $_ENV['DB_PASS'] ?? $_ENV['PGPASSWORD'] ?? '';
+        $this->port = $_ENV['DB_PORT'] ?? $_ENV['PGPORT'] ?? '5432';
     }
 
     public function getConnection() {

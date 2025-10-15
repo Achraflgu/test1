@@ -306,7 +306,7 @@
             $('#storiesList').html('<div class="loading"><div class="spinner-border" role="status"></div><p>Loading stories...</p></div>');
             
             $.ajax({
-                url: '/api/content/stories?limit=10',
+                url: '/api/content/stories.php?limit=10',
                 method: 'GET',
                 success: function(response) {
                     if (response.success) {
@@ -325,7 +325,7 @@
             $('#gamesList').html('<div class="loading"><div class="spinner-border" role="status"></div><p>Loading games...</p></div>');
             
             $.ajax({
-                url: '/api/content/games?limit=10',
+                url: '/api/content/games.php?limit=10',
                 method: 'GET',
                 success: function(response) {
                     if (response.success) {
@@ -344,7 +344,7 @@
             $('#activitiesList').html('<div class="loading"><div class="spinner-border" role="status"></div><p>Loading activities...</p></div>');
             
             $.ajax({
-                url: '/api/content/activities?limit=10',
+                url: '/api/content/activities.php?limit=10',
                 method: 'GET',
                 success: function(response) {
                     if (response.success) {

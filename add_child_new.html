@@ -200,7 +200,7 @@
                 const photoUrl = kidPhoto ? 'images/default-child.png' : 'images/default-child.png';
 
                 $.ajax({
-                    url: '/api/children/add',
+                    url: '/api/children/add.php',
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({

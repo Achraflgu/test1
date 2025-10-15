@@ -1,5 +1,87 @@
 <?php
-// Redirect to login page with registration form
-header('Location: login_new.html#register');
-exit();
+include('connexion.php');
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+    $email = $_POST['signupEmail'];
+    $password = $_POST['signupPassword'];
+    $is_parent = isset($_POST['parentCheckbox']) ? 1 : 0;
+    $number_of_kids = isset($_POST['numberOfKids']) ? $_POST['numberOfKids'] : 0;
+
+    // Insert user information
+    $insertUserSql = "INSERT INTO users (email, password, is_parent, number_of_kids) VALUES (?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($insertUserSql);
+    $stmt->bind_param("ssii", $email, $password, $is_parent, $number_of_kids);
+
+    if ($stmt->execute()) {
+        // Get the ID of the newly inserted user
+        $last_id = $conn->insert_id;
+
+        // Insert information for each child
+        for ($i = 1; $i <= $number_of_kids; $i++) {
+            $kidGender = $_POST["kidGender$i"];
+            $kidName = $_POST["kidName$i"];
+            $kidAge = $_POST["kidAge$i"];
+
+            // File upload for kid photo
+            $targetDirectory = "uploads/";  // Update this path to your desired target directory
+            $targetFile = $targetDirectory . basename($_FILES["kidPhoto$i"]["name"]);
+            $uploadOk = 1;
+            $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+            // Check if file already exists
+            if (file_exists($targetFile)) {
+                echo "Sorry, file already exists.";
+                $uploadOk = 0;
+            }
+
+            // Check file size
+            if ($_FILES["kidPhoto$i"]["size"] > 500000) {
+                echo "Sorry, your file is too large.";
+                $uploadOk = 0;
+            }
+
+            // Allow certain file formats
+            $allowedFileTypes = ["jpg", "jpeg", "png", "gif"];
+            if (!in_array($imageFileType, $allowedFileTypes)) {
+                echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                $uploadOk = 0;
+            }
+
+            // Check if $uploadOk is set to 0 by an error
+            if ($uploadOk == 0) {
+                $defaultPhoto = ($kidGender == 'male') ? 'uploads/defaultmale.jpg' : 'uploads/defaultfemale.jpg';
+            $targetFile = $defaultPhoto;
+            } else {
+                if (move_uploaded_file($_FILES["kidPhoto$i"]["tmp_name"], $targetFile)) {
+                    echo "The file " . basename($_FILES["kidPhoto$i"]["name"]) . " has been uploaded and saved.";
+                } else {
+                    echo "Sorry, there was an error uploading your file.";
+                }
+            }
+
+            // Insert child information
+            $insertChildSql = "INSERT INTO children (user_id, kid_gender, kid_name, kid_age, kid_photo) VALUES (?, ?, ?, ?, ?)";
+
+            $childStmt = $conn->prepare($insertChildSql);
+            $childStmt->bind_param("issss", $last_id, $kidGender, $kidName, $kidAge, $targetFile);
+
+            if (!$childStmt->execute()) {
+                echo "Error inserting child information: " . $childStmt->error;
+            }
+
+            $childStmt->close();
+        }
+
+        // Redirect to login page or any other desired page after successful signup
+        header("Location: login.html");
+        exit();
+    } else {
+        echo "Error inserting user information: " . $stmt->error;
+    }
+
+    // Close the prepared statement and the database connection
+    $stmt->close();
+    $conn->close();
+}
 ?>

@@ -1,0 +1,27 @@
+{
+    "name": "children-universe/php-app",
+    "description": "Children's educational platform with stories, games, and activities",
+    "type": "project",
+    "require": {
+        "php": "^8.0",
+        "ext-pdo": "*",
+        "ext-pdo_pgsql": "*"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "echo 'Dependencies installed successfully'"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

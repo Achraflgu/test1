@@ -172,13 +172,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Handle email parameter from URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const email = urlParams.get('email');
-            if (email) {
-                $('#email').val(email);
-            }
-
             // Toggle between login and register forms
             $('#showRegister').click(function(e) {
                 e.preventDefault();
@@ -211,7 +204,7 @@
                 setLoading('#loginBtn', true);
 
                 $.ajax({
-                    url: '/api/auth/login',
+                    url: '/api/auth/login.php',
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -264,7 +257,7 @@
                 setLoading('#registerBtn', true);
 
                 $.ajax({
-                    url: '/api/auth/register',
+                    url: '/api/auth/register.php',
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({

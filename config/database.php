@@ -10,11 +10,25 @@ class Database {
 
     public function __construct() {
         // Get environment variables from Railway/Neon
-        $this->host = $_ENV['DB_HOST'] ?? $_ENV['PGHOST'] ?? 'localhost';
-        $this->db_name = $_ENV['DB_NAME'] ?? $_ENV['PGDATABASE'] ?? 'children_universe';
-        $this->username = $_ENV['DB_USER'] ?? $_ENV['PGUSER'] ?? 'postgres';
-        $this->password = $_ENV['DB_PASS'] ?? $_ENV['PGPASSWORD'] ?? '';
-        $this->port = $_ENV['DB_PORT'] ?? $_ENV['PGPORT'] ?? '5432';
+        // Support both individual variables and DATABASE_URL
+        if (isset($_ENV['DATABASE_URL'])) {
+            $this->parseDatabaseUrl($_ENV['DATABASE_URL']);
+        } else {
+            $this->host = $_ENV['DB_HOST'] ?? $_ENV['PGHOST'] ?? 'localhost';
+            $this->db_name = $_ENV['DB_NAME'] ?? $_ENV['PGDATABASE'] ?? 'children_universe';
+            $this->username = $_ENV['DB_USER'] ?? $_ENV['PGUSER'] ?? 'postgres';
+            $this->password = $_ENV['DB_PASS'] ?? $_ENV['PGPASSWORD'] ?? '';
+            $this->port = $_ENV['DB_PORT'] ?? $_ENV['PGPORT'] ?? '5432';
+        }
+    }
+
+    private function parseDatabaseUrl($databaseUrl) {
+        $parsed = parse_url($databaseUrl);
+        $this->host = $parsed['host'];
+        $this->port = $parsed['port'] ?? '5432';
+        $this->db_name = ltrim($parsed['path'], '/');
+        $this->username = $parsed['user'];
+        $this->password = $parsed['pass'];
     }
 
     public function getConnection() {

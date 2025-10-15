@@ -55,13 +55,13 @@ if (isset($_GET['kidId'])) {
     
         // Execute the query only if $updateSql is defined
         if ($updateSql !== "") {
-            $stmt = $conn->prepare($updateSql);\nsimpleExecute($sql);\n$updateResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $updateResult = simpleExecute($updateSql);
     
             if ($updateResult) {
                 header("refresh:1;url=profilesetting.php?kidId=$selectedKidId");
                 $alertMessage = '<div class="alert alert-success" role="alert">Profile updated successfully!</div>';
             } else {
-                $alertMessage = '<div class="alert alert-danger" role="alert">Error updating profile: ' . $conn->errorInfo()[2] . '</div>';
+                $alertMessage = '<div class="alert alert-danger" role="alert">Error updating profile</div>';
             }
         }}
 

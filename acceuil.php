@@ -8,10 +8,8 @@ if (!isset($_GET['kidId'])) {
 
 $selectedKidId = $_GET['kidId'];
 
-$sql = "SELECT * FROM children WHERE id = $selectedKidId";
-$stmt = $conn->prepare($sql);
-simpleExecute($sql);
-$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$sql = "SELECT * FROM children WHERE id = " . intval($selectedKidId);
+$result = simpleQuery($sql);
 
 if (count($result) > 0) {
     $row = $result[0];

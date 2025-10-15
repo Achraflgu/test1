@@ -15,10 +15,10 @@ if (!isset($_GET['userId'])) {
 $selectedUserId = $_GET['userId']; // Get the user's ID from the URL
 
 // Fetch user information from the database based on the selected ID
-$sql = "SELECT * FROM users WHERE id = $selectedUserId";
-$result = $result = simpleQuery($sql);
-$kidsSql = "SELECT * FROM children WHERE user_id = $selectedUserId";
-$stmt = $conn->prepare($kidsSql);\nsimpleExecute($sql);\n$kidsResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$sql = "SELECT * FROM users WHERE id = " . intval($selectedUserId);
+$result = simpleQuery($sql);
+$kidsSql = "SELECT * FROM children WHERE user_id = " . intval($selectedUserId);
+$kidsResult = simpleQuery($kidsSql);
 
 if ($result && count($result) > 0) {
     $row = $result[0];

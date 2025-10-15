@@ -50,14 +50,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     $activitiesSql = "SELECT * FROM activities $condition";
-    $stmt = $conn->prepare($activitiesSql);\nsimpleExecute($sql);\n$activitiesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $activitiesResult = simpleQuery($activitiesSql);
 
     if ($activitiesResult === false) {
         // Handle the SQL error
-        die('Error executing query: ' . $conn->errorInfo()[2]);
+        die('Error executing query');
     }
 
-    if ($activitiesResult->num_rows > 0) {
+    if (count($activitiesResult) > 0) {
         foreach ($activitiesResult as $activityRow) {
            
             echo '<style>';

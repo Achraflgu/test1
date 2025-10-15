@@ -50,14 +50,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     $gamesSql = "SELECT * FROM games $condition";
-    $stmt = $conn->prepare($gamesSql);\nsimpleExecute($sql);\n$gamesResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $gamesResult = simpleQuery($gamesSql);
 
     if ($gamesResult === false) {
         // Handle the SQL error
-        die('Error executing query: ' . $conn->errorInfo()[2]);
+        die('Error executing query');
     }
 
-    if ($gamesResult->num_rows > 0) {
+    if (count($gamesResult) > 0) {
         foreach ($gamesResult as $gameRow) {
            
             echo '<style>';

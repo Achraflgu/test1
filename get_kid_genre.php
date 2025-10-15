@@ -1,7 +1,6 @@
 <?php
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
 // Check if kidId is set
 if (!isset($_GET['kidId'])) {
@@ -25,8 +24,8 @@ simpleExecute($sql);
 $result = $stmt->get_result();
 
 // Check if the query was successful
-if ($result && $result->num_rows > 0) {
-    $row = simpleFetchAll($result)[0];
+if ($result && count($result) > 0) {
+    $row = $result[0];
     $kidGenre = $row['kid_gender'];
 
     // Return kid's genre as JSON

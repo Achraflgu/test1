@@ -3,8 +3,7 @@
 
 // Include your database connection
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
 // Check if kidId is set in the URL
 if (isset($_GET['kidId'])) {
@@ -13,7 +12,7 @@ if (isset($_GET['kidId'])) {
 
     // Fetch kid information from the database based on the selected ID
     $sql = "SELECT * FROM children WHERE id = $selectedKidId";
-    simpleQuery($sql);
+    $result = $result = simpleQuery($sql);
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateProfile'])) {
         // Handle form submission (update profile)
@@ -66,8 +65,8 @@ if (isset($_GET['kidId'])) {
             }
         }}
 
-    if ($result && $result->num_rows > 0) {
-        $row = simpleFetchAll($result)[0];
+    if ($result && count($result) > 0) {
+        $row = $result[0];
         $selectedKidName = $row['kid_name'];
         $selectedKidAge = $row['kid_age'];
         $selectedKidPhoto = $row['kid_photo'];
@@ -624,10 +623,10 @@ function displayCategoryCheckboxes($conn, $categoryType, $selectedKidId)
 // Function to get hidden categories from the database
 function getHiddenCategories($conn, $selectedKidId, $hiddenColumnName)
 {
-    simpleQuery("SELECT {$hiddenColumnName} FROM children WHERE id = $selectedKidId");
+    $result = simpleQuery("SELECT {$hiddenColumnName} FROM children WHERE id = $selectedKidId");
 
-    if ($result && $result->num_rows > 0) {
-        $row = simpleFetchAll($result)[0];
+    if ($result && count($result) > 0) {
+        $row = $result[0];
         $hiddenCategories = explode(',', $row[$hiddenColumnName]);
         return array_filter($hiddenCategories);
     }

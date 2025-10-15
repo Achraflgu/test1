@@ -3,19 +3,18 @@
 
 // Include necessary files and database connection
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
 // Get the child ID from the POST data
 $childId = $_POST['childId'];
 
 // Fetch unread notifications for the specified child ID
 $sql = "SELECT * FROM notifications WHERE kid_id = '$childId' AND is_read = 0";
-simpleQuery($sql);
+$result = $result = simpleQuery($sql);
 
-if ($result && $result->num_rows > 0) {
+if ($result && count($result) > 0) {
     $notifications = [];
-    while ($row = simpleFetchAll($result)[0]) {
+    while ($row = $result[0]) {
         $notifications[] = $row;
     }
 

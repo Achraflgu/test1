@@ -1,7 +1,6 @@
 <?php
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $category = $_GET['category'];
@@ -12,13 +11,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     // If the category is not 'all', fetch stories only for the selected category
     if ($category !== 'all') {
-        $sqlHiddenCategories = "SELECT hidden_stories_categories FROM children WHERE id = $kidId";
-        $resultHiddenCategories = $conn->query($sqlHiddenCategories);
+        $sqlHiddenCategories = "SELECT hidden_stories_categories FROM children WHERE id = " . intval($kidId);
+        $resultHiddenCategories = $result = simpleQuery($sqlHiddenCategories);
 
         $hiddenCategories = [];
 
-        if ($resultHiddenCategories && $resultHiddenCategories->num_rows > 0) {
-            $rowHiddenCategories = $resultHiddenCategories->fetch_assoc();
+        if ($resultHiddenCategories && count($resultHiddenCategories) > 0) {
+            $rowHiddenCategories = $resultHiddenCategories[0];
             $hiddenCategories = explode(',', $rowHiddenCategories['hidden_stories_categories']);
         }
 
@@ -33,13 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     // If the category is 'all', exclude stories with hidden categories
     if ($category === 'all') {
-        $sqlAllHiddenCategories = "SELECT hidden_stories_categories FROM children WHERE id = $kidId";
-        $resultAllHiddenCategories = $conn->query($sqlAllHiddenCategories);
+        $sqlAllHiddenCategories = "SELECT hidden_stories_categories FROM children WHERE id = 0";
+        $resultAllHiddenCategories = $result = simpleQuery($sqlAllHiddenCategories);
 
         $allHiddenCategories = [];
 
-        if ($resultAllHiddenCategories && $resultAllHiddenCategories->num_rows > 0) {
-            $rowAllHiddenCategories = $resultAllHiddenCategories->fetch_assoc();
+        if (count($result) > 0) {
+            $rowAllHiddenCategories = $result[0];
             $allHiddenCategories = explode(',', $rowAllHiddenCategories['hidden_stories_categories']);
         }
 

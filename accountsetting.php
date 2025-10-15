@@ -3,8 +3,7 @@
 
 // Include your database connection
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
 // Ensure userId is set
 if (!isset($_GET['userId'])) {
@@ -17,12 +16,12 @@ $selectedUserId = $_GET['userId']; // Get the user's ID from the URL
 
 // Fetch user information from the database based on the selected ID
 $sql = "SELECT * FROM users WHERE id = $selectedUserId";
-simpleQuery($sql);
+$result = $result = simpleQuery($sql);
 $kidsSql = "SELECT * FROM children WHERE user_id = $selectedUserId";
 $stmt = $conn->prepare($kidsSql);\nsimpleExecute($sql);\n$kidsResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if ($result && $result->num_rows > 0) {
-    $row = simpleFetchAll($result)[0];
+if ($result && count($result) > 0) {
+    $row = $result[0];
     $selectedUserEmail = $row['email'];
     $storedPassword = $row['password']; // Assuming password is stored in plain text
 

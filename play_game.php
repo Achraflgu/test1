@@ -156,14 +156,13 @@ p {
         </a>
         <?php
         require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $gameId = $_GET['game_id'];
 
             // Fetch current game details based on the provided game ID
-            $gameSql = "SELECT * FROM games WHERE id = $gameId";
+            $gameSql = "SELECT * FROM games WHERE id = 0";
             $stmt = $conn->prepare($gameSql);\nsimpleExecute($sql);\n$gameResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if ($gameResult->num_rows > 0) {

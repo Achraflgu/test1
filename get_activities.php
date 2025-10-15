@@ -1,7 +1,6 @@
 <?php
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $category = $_GET['category'];
@@ -14,12 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if ($category !== 'all') {
         // Fetch hidden categories for the selected kid
         $sqlHiddenCategories = "SELECT hidden_activities_categories FROM children WHERE id = " . intval($kidId);
-        $resultHiddenCategories = $conn->query($sqlHiddenCategories);
+        $resultHiddenCategories = $result = simpleQuery($sqlHiddenCategories);
 
         $hiddenCategories = [];
 
-        if ($resultHiddenCategories && $resultHiddenCategories->num_rows > 0) {
-            $rowHiddenCategories = $resultHiddenCategories->fetch_assoc();
+        if (count($result) > 0) {
+            $rowHiddenCategories = $result[0];
             $hiddenCategories = explode(',', $rowHiddenCategories['hidden_activities_categories']);
         }
 
@@ -36,12 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if ($category === 'all') {
         // Fetch all hidden categories for the selected kid
         $sqlAllHiddenCategories = "SELECT hidden_activities_categories FROM children WHERE id = " . intval($kidId);
-        $resultAllHiddenCategories = $conn->query($sqlAllHiddenCategories);
+        $resultAllHiddenCategories = $result = simpleQuery($sqlAllHiddenCategories);
 
         $allHiddenCategories = [];
 
-        if ($resultAllHiddenCategories && $resultAllHiddenCategories->num_rows > 0) {
-            $rowAllHiddenCategories = $resultAllHiddenCategories->fetch_assoc();
+        if (count($result) > 0) {
+            $rowAllHiddenCategories = $result[0];
             $allHiddenCategories = explode(',', $rowAllHiddenCategories['hidden_activities_categories']);
         }
 

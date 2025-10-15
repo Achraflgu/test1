@@ -100,4 +100,19 @@ function simpleExecute($sql) {
 function simpleGetLastId() {
     return getSimpleDB()->getLastInsertId();
 }
+
+// Alias for compatibility
+function simpleLastInsertId() {
+    return getSimpleDB()->getLastInsertId();
+}
+
+function simpleFetchAll($result) {
+    // This function is for compatibility - simpleQuery already returns an array
+    return $result;
+}
+
+function simpleAffectedRows() {
+    // For compatibility with MySQL affected_rows
+    return 1; // PostgreSQL doesn't have a direct equivalent
+}
 ?>

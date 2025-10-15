@@ -142,14 +142,13 @@ p {
             <i class="fas fa-arrow-left"></i> Back
         </a> <?php
                 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
                 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     $activityId = $_GET['activity_id'];
 
                     // Fetch activity details based on the provided activity ID
-                    $activitySql = "SELECT * FROM activities WHERE id = $activityId";
+                    $activitySql = "SELECT * FROM activities WHERE id = 0";
                     $stmt = $conn->prepare($activitySql);\nsimpleExecute($sql);\n$activityResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                     if ($activityResult->num_rows > 0) {

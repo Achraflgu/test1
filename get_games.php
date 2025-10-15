@@ -1,7 +1,6 @@
 <?php
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $category = $_GET['category'];
@@ -13,13 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // If the category is not 'all', fetch games only for the selected category
     if ($category !== 'all') {
         // Fetch hidden categories for the selected kid
-        $sqlHiddenCategories = "SELECT hidden_games_categories FROM children WHERE id = $kidId";
-        $resultHiddenCategories = $conn->query($sqlHiddenCategories);
+        $sqlHiddenCategories = "SELECT hidden_games_categories FROM children WHERE id = 0";
+        $resultHiddenCategories = $result = simpleQuery($sqlHiddenCategories);
 
         $hiddenCategories = [];
 
-        if ($resultHiddenCategories && $resultHiddenCategories->num_rows > 0) {
-            $rowHiddenCategories = $resultHiddenCategories->fetch_assoc();
+        if (count($result) > 0) {
+            $rowHiddenCategories = $result[0];
             $hiddenCategories = explode(',', $rowHiddenCategories['hidden_games_categories']);
         }
 
@@ -35,13 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // If the category is 'all', exclude games with hidden categories
     if ($category === 'all') {
         // Fetch all hidden categories for the selected kid
-        $sqlAllHiddenCategories = "SELECT hidden_games_categories FROM children WHERE id = $kidId";
-        $resultAllHiddenCategories = $conn->query($sqlAllHiddenCategories);
+        $sqlAllHiddenCategories = "SELECT hidden_games_categories FROM children WHERE id = 0";
+        $resultAllHiddenCategories = $result = simpleQuery($sqlAllHiddenCategories);
 
         $allHiddenCategories = [];
 
-        if ($resultAllHiddenCategories && $resultAllHiddenCategories->num_rows > 0) {
-            $rowAllHiddenCategories = $resultAllHiddenCategories->fetch_assoc();
+        if (count($result) > 0) {
+            $rowAllHiddenCategories = $result[0];
             $allHiddenCategories = explode(',', $rowAllHiddenCategories['hidden_games_categories']);
         }
 

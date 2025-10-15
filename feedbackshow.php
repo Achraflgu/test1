@@ -36,16 +36,15 @@
                 <?php
                 // Replace these with your database connection details
                 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
                 // Fetch feedback data
                 $sql = "SELECT * FROM feedback";
-                simpleQuery($sql);
+                $result = $result = simpleQuery($sql);
 
-                if ($result->num_rows > 0) {
+                if (count($result) > 0) {
                     // Output data of each row
-                    while ($row = simpleFetchAll($result)[0]) {
+                    while ($row = $result[0]) {
                         echo "<tr>";
                         echo "<td>" . $row["id"] . "</td>";
                         echo "<td>" . $row["name"] . "</td>";

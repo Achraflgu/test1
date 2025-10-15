@@ -1,7 +1,6 @@
 <?php
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
 if (isset($_GET['gameId'])) {
     $gameId = $_GET['gameId'];
@@ -16,7 +15,7 @@ if (isset($_GET['gameId'])) {
     // Check if the query was successful
     if ($result) {
         // Fetch the game details as an associative array
-        $gameDetails = simpleFetchAll($result)[0];
+        $gameDetails = $result[0];
 
         // Return the game details as JSON
         header('Content-Type: application/json');

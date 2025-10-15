@@ -1,7 +1,6 @@
 <?php
 require_once('config/database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
 // Fetch unique categories from the stories table
 $categoriesSql = "SELECT DISTINCT category FROM activities";

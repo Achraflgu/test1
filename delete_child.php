@@ -2,38 +2,36 @@
 // delete_child.php
 
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the child ID from the POST data
-    $childId = $_POST['child_id'];
+    $childId = intval($_POST['child_id']);
 
     // Get the user ID associated with the child
-    $getUserSql = "SELECT user_id FROM children WHERE id = $childId";
-    $stmt = $conn->prepare($getUserSql);\nsimpleExecute($sql);\n$userResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $getUserSql = "SELECT user_id FROM children WHERE id = " . $childId;
+    $userResult = simpleQuery($getUserSql);
 
-    if ($userResult && $userResult->num_rows > 0) {
-        $userData = $userResult->fetch_assoc();
+    if ($userResult && count($userResult) > 0) {
+        $userData = $userResult[0];
         $userId = $userData['user_id'];
 
         // Delete the child from the database
-        $deleteChildSql = "DELETE FROM children WHERE id = $childId";
+        $deleteChildSql = "DELETE FROM children WHERE id = " . $childId;
 
-        if ($conn->query($deleteChildSql)) {
+        if (simpleExecute($deleteChildSql)) {
             // Decrement the number_of_kids for the user
-            $updateUserSql = "UPDATE users SET number_of_kids = number_of_kids - 1 WHERE id = $userId";
+            $updateUserSql = "UPDATE users SET number_of_kids = number_of_kids - 1 WHERE id = " . intval($userId);
 
-            if ($conn->query($updateUserSql)) {
+            if (simpleExecute($updateUserSql)) {
                 echo "Child deleted successfully";
             } else {
-                echo "Error updating number_of_kids for user: " . $conn->errorInfo()[2];
+                echo "Error updating number_of_kids for user";
             }
         } else {
-            echo "Error deleting child: " . $conn->errorInfo()[2];
+            echo "Error deleting child";
         }
     } else {
-        echo "Error fetching user information: " . $conn->errorInfo()[2];
+        echo "Error fetching user information";
     }
 } else {
     echo "Invalid request method";

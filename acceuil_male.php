@@ -8,33 +8,28 @@ if (!isset($_GET['kidId'])) {
 }
 
 // Include your database connection
-include('log_history.php');
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
 
 // Assuming you have the user's selected kid ID passed as URL parameter
 $selectedKidId = $_GET['kidId']; // Get the kid's ID from the URL
 
 // Fetch kid information from the database based on the selected ID
-$sql = "SELECT * FROM children WHERE id = $selectedKidId";
-simpleQuery($sql);
+$sql = "SELECT * FROM children WHERE id = " . intval($selectedKidId);
+$result = simpleQuery($sql);
 
-if ($result && $result->num_rows > 0) {
-    $row = simpleFetchAll($result)[0];
+if ($result && count($result) > 0) {
+    $row = $result[0];
     $selectedKidName = $row['kid_name'];
     $selectedGender = $row['kid_gender'];
     $selectedKidPhoto = $row['kid_photo'];
 
-
-
     // Fetch user_id based on kid_name and id
-    $sql1 = "SELECT user_id FROM children WHERE kid_name = '$selectedKidName' AND id = $selectedKidId";
-    simpleQuery($sql1);
+    $sql1 = "SELECT user_id FROM children WHERE kid_name = '" . addslashes($selectedKidName) . "' AND id = " . intval($selectedKidId);
+    $result1 = simpleQuery($sql1);
 
-    if ($result && $result->num_rows > 0) {
-        $row = simpleFetchAll($result)[0];
-        $selectedUserId = $row['user_id'];
+    if ($result1 && count($result1) > 0) {
+        $row1 = $result1[0];
+        $selectedUserId = $row1['user_id'];
     }
 ?>
 

@@ -1,8 +1,7 @@
 <?php
 // Include the database connection file
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
 // Check if the activity ID is provided
 if (isset($_GET['activityId'])) {
@@ -18,7 +17,7 @@ if (isset($_GET['activityId'])) {
     // Check if the query was successful
     if ($result) {
         // Fetch the activity details as an associative array
-        $activityDetails = simpleFetchAll($result)[0];
+        $activityDetails = $result[0];
 
         // Return the activity details as JSON
         header('Content-Type: application/json');

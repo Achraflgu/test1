@@ -136,14 +136,13 @@
         </a>
         <?php
         require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $storyId = $_GET['story_id'];
 
             // Fetch story details based on the provided story ID
-            $storySql = "SELECT * FROM stories WHERE id = $storyId";
+            $storySql = "SELECT * FROM stories WHERE id = 0";
             $stmt = $conn->prepare($storySql);\nsimpleExecute($sql);\n$storyResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if ($storyResult->num_rows > 0) {

@@ -6,8 +6,7 @@ $selectedKidId = isset($_GET['kidId']) ? intval($_GET['kidId']) : 0;
 
 // Include your database connection
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
 // Number of records per page
 $recordsPerPage = 10;
@@ -174,7 +173,7 @@ h2 {
 <div class="container">
     <?php
     // Display historic data in a table
-    if ($result->num_rows > 0) {
+    if (count($result) > 0) {
         ?>
         <h2 class="mb-4">Ur Kid's history : <i class="fas fa-child"></i></h2>
         <div class="table-responsive">
@@ -189,7 +188,7 @@ h2 {
                 </thead>
                 <tbody>
                 <?php
-                while ($row = simpleFetchAll($result)[0]) {
+                while ($row = $result[0]) {
                     ?>
                     <tr>
                         <td><?php echo date('Y-m-d', strtotime($row['date_time'])); ?></td>

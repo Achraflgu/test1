@@ -16,7 +16,7 @@ if (isset($_GET['storyId'])) {
     // Check if the query was successful
     if ($result) {
         // Fetch the story details as an associative array
-        $storyDetails = simpleFetchAll($result)[0];
+        $storyDetails = $result[0];
 
         // Return the story details as JSON
         header('Content-Type: application/json');

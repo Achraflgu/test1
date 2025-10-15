@@ -3,24 +3,23 @@
 
 // Include necessary files and database connection
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
 // Get the notification message from the POST data
 $notificationMessage = $_POST['message'];
 
 // Fetch all child IDs
 $sql = "SELECT id FROM children";
-simpleQuery($sql);
+$result = $result = simpleQuery($sql);
 
-if ($result && $result->num_rows > 0) {
+if ($result && count($result) > 0) {
     // Prepare the INSERT statement
     $insertNotificationSql = $conn->prepare("INSERT INTO notifications (kid_id, message) VALUES (?, ?)");
 
     // Bind parameters
     $insertNotificationSql->bind_param("is", $childId, $notificationMessage);
 
-    while ($row = simpleFetchAll($result)[0]) {
+    while ($row = $result[0]) {
         $childId = $row['id'];
 
         // Execute the prepared statement for each child

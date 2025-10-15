@@ -3,18 +3,17 @@
 
 // Include your database connection
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
+
 
 // Assuming you have the user's selected kid ID passed as URL parameter
 $selectedKidId = $_POST['kidId']; // Use $_POST instead of $_GET for security
 
 // Fetch kid information from the database based on the selected ID
 $sql = "SELECT * FROM children WHERE id = $selectedKidId";
-simpleQuery($sql);
+$result = $result = simpleQuery($sql);
 
-if ($result && $result->num_rows > 0) {
-    $row = simpleFetchAll($result)[0];
+if ($result && count($result) > 0) {
+    $row = $result[0];
     $selectedKidName = $row['kid_name'];
     $selectedKidAge = $row['kid_age'];
     $selectedKidPhoto = $row['kid_photo'];

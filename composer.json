@@ -3,7 +3,7 @@
     "description": "Children's educational platform with stories, games, and activities",
     "type": "project",
     "require": {
-        "php": "^8.0",
+        "php": "^8.3",
         "ext-pdo": "*",
         "ext-pdo_pgsql": "*"
     },

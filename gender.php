@@ -28,11 +28,11 @@ if (preg_match('/^(male|female)\|(.+)\|(\d+)$/', $selectedValue, $matches)) {
         header("Location: login.php?error=invalid_selection");
         exit();
     }
-} else {
-    // Show an error message for an invalid format - redirect to login
-    header("Location: login.php?error=invalid_format");
-    exit();
-}
+    } else {
+        // Show an error message for an invalid format - redirect to login
+        header("Location: login.php?error=invalid_format");
+        exit();
+    }
 } else {
     // No POST data received - redirect to login
     header("Location: login.php?error=no_data");

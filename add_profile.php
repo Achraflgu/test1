@@ -1,8 +1,6 @@
 <?php
 session_start();
-require_once('config/database.php');
-$database = new Database();
-$conn = $database->getConnection();
+require_once('config/simple_database.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Assuming user ID is stored in the session
@@ -49,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Move the uploaded file to the target directory
                 if (move_uploaded_file($_FILES["newKidPhoto"]["tmp_name"], $targetFile)) {
                     // Insert data into the 'children' table with user_id
-                    $sql = "INSERT INTO children (user_id, kid_gender, kid_name, kid_age, kid_photo) VALUES ('$userId', '$gender', '$kidName', $age, '$targetFile')";
+                    $sql = "INSERT INTO children (user_id, kid_gender, kid_name, kid_age, kid_photo) VALUES (" . intval($userId) . ", '" . addslashes($gender) . "', '" . addslashes($kidName) . "', " . intval($age) . ", '" . addslashes($targetFile) . "')";
                 } else {
                     echo "Sorry, there was an error uploading your file.";
                 }
@@ -60,22 +58,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $targetFile = $targetDir . $defaultPhoto;
 
             // Insert data into the 'children' table with user_id
-            $sql = "INSERT INTO children (user_id, kid_gender, kid_name, kid_age, kid_photo) VALUES ('$userId', '$gender', '$kidName', $age, '$targetFile')";
+            $sql = "INSERT INTO children (user_id, kid_gender, kid_name, kid_age, kid_photo) VALUES (" . intval($userId) . ", '" . addslashes($gender) . "', '" . addslashes($kidName) . "', " . intval($age) . ", '" . addslashes($targetFile) . "')";
         }
 
-        if ($conn->query($sql) === TRUE) {
-            // Check if userId is already present in the URL
-            $referer = $_SERVER['HTTP_REFERER'];
-            if (strpos($referer, 'userId') === false) {
-                // If userId is not present, append it to the URL
-                $referer .= (strpos($referer, '?') !== false ? '&' : '?') . "userId=$userId";
-            }
+        try {
+            $result = simpleExecute($sql);
+            if ($result) {
+                // Check if userId is already present in the URL
+                $referer = $_SERVER['HTTP_REFERER'];
+                if (strpos($referer, 'userId') === false) {
+                    // If userId is not present, append it to the URL
+                    $referer .= (strpos($referer, '?') !== false ? '&' : '?') . "userId=$userId";
+                }
 
-            // Redirect back to the referring page with or without userId parameter
-            header("Location: " . $referer);
-            exit();
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->errorInfo()[2];
+                // Redirect back to the referring page with or without userId parameter
+                header("Location: " . $referer);
+                exit();
+            } else {
+                echo "Error: Failed to insert child profile";
+            }
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
         }
     } else {
         echo "User ID not set in the session.";

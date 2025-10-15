@@ -8,7 +8,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $number_of_kids = isset($_POST['numberOfKids']) ? $_POST['numberOfKids'] : 0;
 
     // Insert user information using simple query
-    $insertUserSql = "INSERT INTO users (username, email, password, is_parent, number_of_kids) VALUES ('" . addslashes($email) . "', '" . addslashes($email) . "', '" . addslashes($password) . "', " . intval($is_parent) . ", " . intval($number_of_kids) . ")";
+    $is_parent_bool = $is_parent ? 'true' : 'false';
+    $insertUserSql = "INSERT INTO users (username, email, password, is_parent, number_of_kids) VALUES ('" . addslashes($email) . "', '" . addslashes($email) . "', '" . addslashes($password) . "', " . $is_parent_bool . ", " . intval($number_of_kids) . ")";
 
     try {
         $result = simpleExecute($insertUserSql);

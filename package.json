@@ -8,9 +8,7 @@
     "build": "echo 'No build step required for static files'",
     "deploy": "vercel --prod"
   },
-  "dependencies": {
-    "vercel-php": "^0.6.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "vercel": "^32.0.0"
   },

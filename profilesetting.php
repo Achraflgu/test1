@@ -594,15 +594,12 @@ function displayCategoryCheckboxes($categoryType, $selectedKidId)
 
     $hiddenCategories = getHiddenCategories($selectedKidId, $hiddenColumnName);
 
-        foreach ($categoriesResult as $row) {
-            echo '<li class="list-group-item">';
-            echo '<input type="checkbox" class="form-check-checkbox m-1" name="hidden' . $categoryType . '[]" value="' . $row['category'] . '" ' .
-                (in_array($row['category'], $hiddenCategories) ? 'checked' : '') . '>';
-            echo $row['category'];
-            echo '</li>';
-        }
-    } else {
-        echo '<p class="text-danger">Column does not exist in the database table.</p>';
+    foreach ($categoriesResult as $row) {
+        echo '<li class="list-group-item">';
+        echo '<input type="checkbox" class="form-check-checkbox m-1" name="hidden' . $categoryType . '[]" value="' . $row['category'] . '" ' .
+            (in_array($row['category'], $hiddenCategories) ? 'checked' : '') . '>';
+        echo $row['category'];
+        echo '</li>';
     }
 
     echo '</div>';

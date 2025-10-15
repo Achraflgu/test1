@@ -35,10 +35,10 @@ function fetchRandomEntries($table, $limit = 5, $hiddenCategories = [])
     $whereCondition = '';
     if (!empty($hiddenCategories)) {
         $hiddenCategoriesString = implode("','", $hiddenCategories);
-        $whereCondition = "AND category NOT IN ('$hiddenCategoriesString')";
+        $whereCondition = "WHERE category NOT IN ('$hiddenCategoriesString')";
     }
 
-    $sql = "SELECT * FROM $table WHERE 1 $whereCondition ORDER BY RANDOM() LIMIT $limit";
+    $sql = "SELECT * FROM $table $whereCondition ORDER BY RANDOM() LIMIT $limit";
     $result = simpleQuery($sql);
 
     $entries = [];

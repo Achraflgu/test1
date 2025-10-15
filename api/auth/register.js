@@ -1,6 +1,15 @@
-const { createClient } = require('@vercel/postgres');
+const { Pool } = require('pg');
 
-module.exports = async (req, res) => {
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  port: process.env.DB_PORT || 5432,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
+
+export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -24,15 +33,8 @@ module.exports = async (req, res) => {
       return;
     }
 
-    // Create PostgreSQL client
-    const client = createClient({
-      connectionString: process.env.POSTGRES_URL,
-    });
-
-    await client.connect();
-
     // Check if user already exists
-    const existingUser = await client.query(
+    const existingUser = await pool.query(
       'SELECT id FROM users WHERE email = $1',
       [email]
     );
@@ -43,7 +45,7 @@ module.exports = async (req, res) => {
     }
 
     // Create new user
-    const result = await client.query(
+    const result = await pool.query(
       'INSERT INTO users (email, password, is_parent, number_of_kids) VALUES ($1, $2, $3, $4) RETURNING id',
       [email, password, is_parent, number_of_kids]
     );
@@ -54,10 +56,10 @@ module.exports = async (req, res) => {
       user_id: result.rows[0].id
     };
 
-    res.json(response);
+    res.status(200).json(response);
 
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-};
+}

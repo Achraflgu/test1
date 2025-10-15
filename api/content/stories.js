@@ -1,6 +1,15 @@
-const { createClient } = require('@vercel/postgres');
+const { Pool } = require('pg');
 
-module.exports = async (req, res) => {
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  port: process.env.DB_PORT || 5432,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
+
+export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -19,27 +28,20 @@ module.exports = async (req, res) => {
   try {
     const { category = 'all', kid_id, limit = 5 } = req.query;
 
-    // Create PostgreSQL client
-    const client = createClient({
-      connectionString: process.env.POSTGRES_URL,
-    });
-
-    await client.connect();
-
-    let whereClause = '';
+    let query = 'SELECT * FROM stories';
     let params = [];
     let paramCount = 0;
 
     // If kidId is provided, check for hidden categories
     if (kid_id) {
-      const hiddenCategories = await client.query(
+      const hiddenResult = await pool.query(
         'SELECT hidden_stories_categories FROM children WHERE id = $1',
         [kid_id]
       );
 
       let hiddenCats = [];
-      if (hiddenCategories.rows.length > 0 && hiddenCategories.rows[0].hidden_stories_categories) {
-        hiddenCats = hiddenCategories.rows[0].hidden_stories_categories.split(',').map(cat => cat.trim());
+      if (hiddenResult.rows.length > 0 && hiddenResult.rows[0].hidden_stories_categories) {
+        hiddenCats = hiddenResult.rows[0].hidden_stories_categories.split(',').map(cat => cat.trim());
       }
 
       if (category !== 'all') {
@@ -47,42 +49,39 @@ module.exports = async (req, res) => {
           res.status(403).json({ error: 'Category is hidden for this child' });
           return;
         }
-        whereClause = 'WHERE category = $1';
+        query += ' WHERE category = $1';
         params.push(category);
-        paramCount = 1;
+        paramCount++;
       } else {
         if (hiddenCats.length > 0) {
           const placeholders = hiddenCats.map((_, index) => `$${paramCount + index + 1}`).join(',');
-          whereClause = `WHERE category IS NULL OR category NOT IN (${placeholders})`;
+          query += ` WHERE category IS NULL OR category NOT IN (${placeholders})`;
           params.push(...hiddenCats);
-          paramCount = hiddenCats.length;
+          paramCount += hiddenCats.length;
         }
       }
     } else {
       if (category !== 'all') {
-        whereClause = 'WHERE category = $1';
+        query += ' WHERE category = $1';
         params.push(category);
-        paramCount = 1;
+        paramCount++;
       }
     }
 
     // Add limit
+    query += ` ORDER BY RAND() LIMIT $${paramCount + 1}`;
     params.push(parseInt(limit));
-    const limitParam = `$${paramCount + 1}`;
 
-    const stories = await client.query(
-      `SELECT * FROM stories ${whereClause} ORDER BY RAND() LIMIT ${limitParam}`,
-      params
-    );
+    const result = await pool.query(query, params);
 
-    res.json({
+    res.status(200).json({
       success: true,
-      stories: stories.rows,
-      count: stories.rows.length
+      stories: result.rows,
+      count: result.rows.length
     });
 
   } catch (error) {
     console.error('Get stories error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-};
+}

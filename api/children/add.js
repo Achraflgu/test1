@@ -1,6 +1,15 @@
-const { createClient } = require('@vercel/postgres');
+const { Pool } = require('pg');
 
-module.exports = async (req, res) => {
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  port: process.env.DB_PORT || 5432,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
+
+export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -36,27 +45,22 @@ module.exports = async (req, res) => {
       return;
     }
 
-    // Create PostgreSQL client
-    const client = createClient({
-      connectionString: process.env.POSTGRES_URL,
-    });
-
-    await client.connect();
-
     // Create new child profile
-    const result = await client.query(
+    const result = await pool.query(
       'INSERT INTO children (user_id, kid_name, kid_gender, kid_age, kid_photo) VALUES ($1, $2, $3, $4, $5) RETURNING id',
       [user_id, kid_name, kid_gender, kid_age, kid_photo]
     );
 
-    res.json({
+    const response = {
       success: true,
       message: 'Child profile created successfully',
       child_id: result.rows[0].id
-    });
+    };
+
+    res.status(200).json(response);
 
   } catch (error) {
     console.error('Add child error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-};
+}

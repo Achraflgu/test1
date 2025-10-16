@@ -547,9 +547,11 @@ h2{
             const userEmail = localStorage.getItem('userEmail');
             const userId = localStorage.getItem('userId');
             
-            if (isLoggedIn === 'true' && userEmail && userId) {
-                // User is already logged in, redirect to appropriate page
-                window.location.href = 'gender.php?auto_login=1';
+            // If user is logged in via localStorage but not in PHP session, sync them
+            if (isLoggedIn === 'true' && userEmail && userId && !<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>) {
+                // User is logged in via localStorage but not in PHP session
+                // Redirect to login.php with auto_login to sync the session
+                window.location.href = 'login.php?auto_login=1&email=' + encodeURIComponent(userEmail) + '&password=' + encodeURIComponent(localStorage.getItem('userPassword') || '');
                 return;
             }
             
@@ -558,6 +560,7 @@ h2{
                 // Auto-login from signup - save to localStorage
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('userEmail', '<?php echo addslashes($_SESSION['email'] ?? ''); ?>');
+                localStorage.setItem('userPassword', '<?php echo addslashes($_GET['password'] ?? ''); ?>');
                 localStorage.setItem('userId', '<?php echo $_SESSION['user_id']; ?>');
                 localStorage.setItem('loginTime', new Date().toISOString());
             <?php endif; ?>
@@ -588,6 +591,7 @@ h2{
                                 // Login successful
                                 localStorage.setItem('isLoggedIn', 'true');
                                 localStorage.setItem('userEmail', email);
+                                localStorage.setItem('userPassword', password);
                                 localStorage.setItem('loginTime', new Date().toISOString());
                                 
                                 // Extract userId from response or session
@@ -603,6 +607,7 @@ h2{
                             // If response is not JSON, it means login was successful (HTML response)
                             localStorage.setItem('isLoggedIn', 'true');
                             localStorage.setItem('userEmail', email);
+                            localStorage.setItem('userPassword', password);
                             localStorage.setItem('loginTime', new Date().toISOString());
                             location.reload();
                         }

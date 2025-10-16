@@ -95,6 +95,7 @@ session_destroy();
             // Clear localStorage on logout
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('userEmail');
+            localStorage.removeItem('userPassword');
             localStorage.removeItem('userId');
             localStorage.removeItem('loginTime');
             localStorage.removeItem('selectedKidId');

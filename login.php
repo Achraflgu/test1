@@ -134,8 +134,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         } else {
             // Password is incorrect
-            echo "Incorrect password!";
+            echo json_encode(['success' => false, 'error' => 'Incorrect password!']);
+            exit();
         }
+    } else {
+        // User not found
+        echo json_encode(['success' => false, 'error' => 'User not found!']);
+        exit();
     }
 }
 
@@ -573,28 +578,38 @@ h2{
                         loginPassword: password
                     },
                     success: function(response) {
-                        // Check if login was successful (no error messages)
-                        if (!response.includes('Incorrect password') && !response.includes('User not found')) {
-                            // Save login info to localStorage
+                        try {
+                            const data = JSON.parse(response);
+                            if (data.success === false) {
+                                // Login failed - redirect to login.html
+                                alert(data.error);
+                                window.location.href = 'login.html';
+                            } else {
+                                // Login successful
+                                localStorage.setItem('isLoggedIn', 'true');
+                                localStorage.setItem('userEmail', email);
+                                localStorage.setItem('loginTime', new Date().toISOString());
+                                
+                                // Extract userId from response or session
+                                const userIdMatch = response.match(/userId['"]\s*:\s*['"]?(\d+)['"]?/);
+                                if (userIdMatch) {
+                                    localStorage.setItem('userId', userIdMatch[1]);
+                                }
+                                
+                                // Reload page to show logged in state
+                                location.reload();
+                            }
+                        } catch (e) {
+                            // If response is not JSON, it means login was successful (HTML response)
                             localStorage.setItem('isLoggedIn', 'true');
                             localStorage.setItem('userEmail', email);
                             localStorage.setItem('loginTime', new Date().toISOString());
-                            
-                            // Extract userId from response or session
-                            const userIdMatch = response.match(/userId['"]\s*:\s*['"]?(\d+)['"]?/);
-                            if (userIdMatch) {
-                                localStorage.setItem('userId', userIdMatch[1]);
-                            }
-                            
-                            // Reload page to show logged in state
                             location.reload();
-                        } else {
-                            // Show error message
-                            alert('Login failed. Please check your credentials.');
                         }
                     },
                     error: function() {
                         alert('An error occurred during login.');
+                        window.location.href = 'login.html';
                     }
                 });
             });

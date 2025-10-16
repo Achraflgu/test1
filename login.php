@@ -13,12 +13,17 @@ if (!isset($_SESSION['user_id']) && !isset($_GET['auto_login']) && $_SERVER["REQ
             const isLoggedIn = localStorage.getItem("isLoggedIn");
             const userEmail = localStorage.getItem("userEmail");
             const userId = localStorage.getItem("userId");
+            const userPassword = localStorage.getItem("userPassword");
             
-            if (isLoggedIn === "true" && userEmail && userId) {
+            console.log("localStorage check:", {isLoggedIn, userEmail, userId, hasPassword: !!userPassword});
+            
+            if (isLoggedIn === "true" && userEmail && userId && userPassword) {
                 // User is logged in via localStorage, sync with PHP session
-                window.location.href = "login.php?auto_login=1&email=" + encodeURIComponent(userEmail) + "&password=" + encodeURIComponent(localStorage.getItem("userPassword") || "");
+                console.log("Redirecting to auto_login with credentials");
+                window.location.href = "login.php?auto_login=1&email=" + encodeURIComponent(userEmail) + "&password=" + encodeURIComponent(userPassword);
             } else {
                 // User is not logged in via localStorage, redirect to login.html
+                console.log("No valid localStorage data, redirecting to login.html");
                 window.location.href = "login.html";
             }
         </script>';
@@ -34,6 +39,9 @@ if (!isset($_SESSION['user_id']) && !isset($_GET['auto_login']) && $_SERVER["REQ
 if (isset($_GET['auto_login']) && $_GET['auto_login'] == '1') {
     $enteredEmail = $_GET['email'];
     $enteredPassword = $_GET['password'];
+    
+    // Debug logging
+    error_log("Auto-login attempt: email=" . $enteredEmail . ", password_length=" . strlen($enteredPassword));
     
     // Use simple query without prepared statements
     $sql = "SELECT * FROM users WHERE email = '" . addslashes($enteredEmail) . "'";

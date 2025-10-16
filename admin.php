@@ -19,7 +19,18 @@ if (count($result) == 0) {
 }
 
 $user = $result[0];
-if (!isset($user['isAdmin']) || !($user['isAdmin'] == 1 || $user['isAdmin'] === true || $user['isAdmin'] === 'true')) {
+
+// Check for admin status - handle different possible field names and values
+$isAdmin = false;
+if (isset($user['isAdmin'])) {
+    $isAdmin = ($user['isAdmin'] == 1 || $user['isAdmin'] === true || $user['isAdmin'] === 'true' || $user['isAdmin'] === 't');
+} elseif (isset($user['is_admin'])) {
+    $isAdmin = ($user['is_admin'] == 1 || $user['is_admin'] === true || $user['is_admin'] === 'true' || $user['is_admin'] === 't');
+} elseif (isset($user['admin'])) {
+    $isAdmin = ($user['admin'] == 1 || $user['admin'] === true || $user['admin'] === 'true' || $user['admin'] === 't');
+}
+
+if (!$isAdmin) {
     header("Location: login.php");
     exit();
 }

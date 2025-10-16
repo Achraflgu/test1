@@ -185,12 +185,12 @@ h2 {
                 </thead>
                 <tbody>
                 <?php
-                while ($row = $result[0]) {
+                foreach ($result as $row) {
                     ?>
                     <tr>
                         <td><?php echo date('Y-m-d', strtotime($row['date_time'])); ?></td>
                         <td><?php echo date('H:i:s', strtotime($row['date_time'])); ?></td>
-                        <td><?php echo $row['time_spent']; ?></td>
+                        <td><?php echo isset($row['time_spent']) ? round($row['time_spent'], 2) . ' seconds' : 'N/A'; ?></td>
                         <td><?php echo $row['page_name']; ?></td>
                     </tr>
                     <?php
@@ -205,12 +205,9 @@ h2 {
     <ul class="pagination justify-content-center">
         <?php
         // Calculate the total number of pages
-        $sqlCount = "SELECT COUNT(*) as count FROM historic_data WHERE kid_id = ?";
-        $stmtCount = $conn->prepare($sqlCount);
-        $stmtCount->bind_param("i", $selectedKidId);
-        $stmtCount->execute();
-        $resultCount = $stmtCount->get_result();
-        $rowCount = $resultCount->fetch_assoc()['count'];
+        $sqlCount = "SELECT COUNT(*) as count FROM historic_data WHERE kid_id = " . intval($selectedKidId);
+        $resultCount = simpleQuery($sqlCount);
+        $rowCount = $resultCount[0]['count'];
         $totalPages = ceil($rowCount / $recordsPerPage);
 
         // Determine the range of pages to display

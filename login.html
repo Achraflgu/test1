@@ -157,9 +157,9 @@
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             const userId = localStorage.getItem('userId');
             
-            // If user is logged in, redirect to login.php
+            // If user is logged in, redirect to login.php with flag
             if (isLoggedIn === 'true' && userId) {
-                window.location.href = 'login.php';
+                window.location.href = 'login.php?from_login_html=1';
             }
         })();
     </script>
@@ -187,6 +187,9 @@
                             </div>
                             <div class="mb-3">
                                 <button type="submit" class="btn btn-primary w-100">Connexion</button>
+                            </div>
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-success w-100" id="demoLoginBtn">Demo Login (Portfolio)</button>
                             </div>
                         </form>
                         <div class="form-link text-center">
@@ -297,6 +300,14 @@
             } else {
                 $("#parentOptions").slideUp(400);
             }
+        });
+
+        // Demo login button for portfolio
+        $("#demoLoginBtn").click(function() {
+            $("#loginEmail").val("test@ww.com");
+            $("#loginPassword").val("test@ww.com");
+            // Auto-submit the form
+            $("form[action='login.php']").submit();
         });
 
         // Générer dynamiquement des champs de saisie pour les informations sur les enfants

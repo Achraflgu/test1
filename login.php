@@ -5,9 +5,9 @@ require_once('config/simple_database.php');
 
 // Check if user is not logged in and not in auto-login mode and not a POST request
 if (!isset($_SESSION['user_id']) && !isset($_GET['auto_login']) && $_SERVER["REQUEST_METHOD"] != "POST") {
-    // Let JavaScript handle localStorage check first
-    if (!isset($_GET['localStorage_check'])) {
-        // Add a flag to indicate we need to check localStorage
+    // Check if this is a direct visit to login.php (not from login.html)
+    if (!isset($_GET['from_login_html'])) {
+        // Let JavaScript handle localStorage check first
         echo '<script>
             // Check localStorage immediately
             const isLoggedIn = localStorage.getItem("isLoggedIn");
@@ -28,11 +28,8 @@ if (!isset($_SESSION['user_id']) && !isset($_GET['auto_login']) && $_SERVER["REQ
             }
         </script>';
         exit();
-    } else {
-        // If localStorage_check is set but no session, redirect to login.html with flag
-        header("Location: login.html?from_login_php=1");
-        exit();
     }
+    // If from_login_html is set, continue to show login form below
 }
 
 // If user is already logged in (has session), show child profiles

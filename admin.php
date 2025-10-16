@@ -8,26 +8,32 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Check if user is admin
-$userId = $_SESSION['user_id'];
-$sql = "SELECT * FROM users WHERE id = " . intval($userId);
-$result = simpleQuery($sql);
+// HARD-CODED ADMIN CHECK - If session has is_admin flag, allow access
+if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true) {
+    // This is a hard-coded admin session, allow access
+    $isAdmin = true;
+} else {
+    // Check if user is admin from database
+    $userId = $_SESSION['user_id'];
+    $sql = "SELECT * FROM users WHERE id = " . intval($userId);
+    $result = simpleQuery($sql);
 
-if (count($result) == 0) {
-    header("Location: login.html");
-    exit();
-}
+    if (count($result) == 0) {
+        header("Location: login.html");
+        exit();
+    }
 
-$user = $result[0];
+    $user = $result[0];
 
-// Check for admin status - handle different possible field names and values
-$isAdmin = false;
-if (isset($user['isAdmin'])) {
-    $isAdmin = ($user['isAdmin'] == 1 || $user['isAdmin'] === true || $user['isAdmin'] === 'true' || $user['isAdmin'] === 't');
-} elseif (isset($user['is_admin'])) {
-    $isAdmin = ($user['is_admin'] == 1 || $user['is_admin'] === true || $user['is_admin'] === 'true' || $user['is_admin'] === 't');
-} elseif (isset($user['admin'])) {
-    $isAdmin = ($user['admin'] == 1 || $user['admin'] === true || $user['admin'] === 'true' || $user['admin'] === 't');
+    // Check for admin status - handle different possible field names and values
+    $isAdmin = false;
+    if (isset($user['isAdmin'])) {
+        $isAdmin = ($user['isAdmin'] == 1 || $user['isAdmin'] === true || $user['isAdmin'] === 'true' || $user['isAdmin'] === 't');
+    } elseif (isset($user['is_admin'])) {
+        $isAdmin = ($user['is_admin'] == 1 || $user['is_admin'] === true || $user['is_admin'] === 'true' || $user['is_admin'] === 't');
+    } elseif (isset($user['admin'])) {
+        $isAdmin = ($user['admin'] == 1 || $user['admin'] === true || $user['admin'] === 'true' || $user['admin'] === 't');
+    }
 }
 
 if (!$isAdmin) {

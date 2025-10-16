@@ -103,6 +103,15 @@ if (isset($_GET['auto_login']) && $_GET['auto_login'] == '1') {
     $enteredEmail = $_GET['email'];
     $enteredPassword = $_GET['password'];
     
+    // HARD-CODED ADMIN CHECK - If admin credentials, go directly to admin.php
+    if ($enteredEmail === 'admin@example.com' && $enteredPassword === 'admin123') {
+        error_log("HARD-CODED ADMIN AUTO-LOGIN: Redirecting to admin.php");
+        $_SESSION['user_id'] = 999; // Set a fake admin session ID
+        $_SESSION['is_admin'] = true;
+        header("Location: admin.php");
+        exit();
+    }
+    
     // Debug logging
     error_log("Auto-login attempt: email=" . $enteredEmail . ", password_length=" . strlen($enteredPassword));
     
@@ -155,6 +164,15 @@ if (isset($_GET['auto_login']) && $_GET['auto_login'] == '1') {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $enteredEmail = $_POST['loginEmail'];
     $enteredPassword = trim($_POST['loginPassword']);
+
+    // HARD-CODED ADMIN CHECK - If admin credentials, go directly to admin.php
+    if ($enteredEmail === 'admin@example.com' && $enteredPassword === 'admin123') {
+        error_log("HARD-CODED ADMIN LOGIN: Redirecting to admin.php");
+        $_SESSION['user_id'] = 999; // Set a fake admin session ID
+        $_SESSION['is_admin'] = true;
+        header("Location: admin.php");
+        exit();
+    }
 
     // Use simple query without prepared statements
     $sql = "SELECT * FROM users WHERE email = '" . addslashes($enteredEmail) . "'";

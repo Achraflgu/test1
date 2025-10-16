@@ -32,9 +32,41 @@ if (!isset($_SESSION['user_id']) && !isset($_GET['auto_login']) && $_SERVER["REQ
     // If from_login_html is set, continue to show login form below
 }
 
-// If user is already logged in (has session), show child profiles
+// If user is already logged in (has session), check if admin first
 if (isset($_SESSION['user_id']) && $_SERVER["REQUEST_METHOD"] != "POST" && !isset($_GET['auto_login'])) {
+    // HARD-CODED ADMIN CHECK - If session has is_admin flag, redirect to admin.php
+    if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true) {
+        error_log("ADMIN USER ON LOGIN.PHP: Redirecting to admin.php");
+        header("Location: admin.php");
+        exit();
+    }
+    
+    // Check if user is admin from database
     $userId = $_SESSION['user_id'];
+    $userSql = "SELECT * FROM users WHERE id = " . intval($userId);
+    $userResult = simpleQuery($userSql);
+    
+    if (count($userResult) > 0) {
+        $user = $userResult[0];
+        
+        // Check for admin status - handle different possible field names and values
+        $isAdmin = false;
+        if (isset($user['isAdmin'])) {
+            $isAdmin = ($user['isAdmin'] == 1 || $user['isAdmin'] === true || $user['isAdmin'] === 'true' || $user['isAdmin'] === 't');
+        } elseif (isset($user['is_admin'])) {
+            $isAdmin = ($user['is_admin'] == 1 || $user['is_admin'] === true || $user['is_admin'] === 'true' || $user['is_admin'] === 't');
+        } elseif (isset($user['admin'])) {
+            $isAdmin = ($user['admin'] == 1 || $user['admin'] === true || $user['admin'] === 'true' || $user['admin'] === 't');
+        }
+        
+        if ($isAdmin) {
+            error_log("ADMIN USER FROM DATABASE ON LOGIN.PHP: Redirecting to admin.php");
+            header("Location: admin.php");
+            exit();
+        }
+    }
+    
+    // If not admin, show child profiles
     $childrenSql = "SELECT * FROM children WHERE user_id = " . intval($userId);
     $childrenResult = simpleQuery($childrenSql);
 

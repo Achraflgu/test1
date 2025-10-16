@@ -35,6 +35,72 @@ if (!isset($_SESSION['user_id']) && !isset($_GET['auto_login']) && $_SERVER["REQ
     }
 }
 
+// If user is already logged in (has session), show child profiles
+if (isset($_SESSION['user_id']) && $_SERVER["REQUEST_METHOD"] != "POST" && !isset($_GET['auto_login'])) {
+    $userId = $_SESSION['user_id'];
+    $childrenSql = "SELECT * FROM children WHERE user_id = " . intval($userId);
+    $childrenResult = simpleQuery($childrenSql);
+
+    if (count($childrenResult) > 0) {
+        echo '<div class="container mt-10">';
+        echo '<div class="row justify-content-center align-items-center">';
+        echo '<div class="col-lg-10 col-md-12 text-center">';
+        echo '<h2 class=" " style="font-weight: bold; text-align: center; ">Select a Child Profile</h2>';
+
+        echo '<form id="profileForm" method="post" action="gender.php">';
+        echo '<div class="custom-radio d-flex justify-content-center">';
+    
+        foreach ($childrenResult as $kidRow) {
+            $kidGender = $kidRow["kid_gender"];
+            $kidName = $kidRow["kid_name"];
+            $kidPhoto = $kidRow["kid_photo"];
+            $kidId = $kidRow['id'];
+    
+            $sanitizedKidName = urlencode(sanitizeKidName($kidName));
+            $genderClass = ($kidGender === 'female') ? ' card-female' : ' card-male';
+    
+            echo '<div class="card' . $genderClass . ' mx-2 mb-4" style="flex: 0 0 auto; width: 200px; min-height: 350px; text-align: center;">';
+            echo '<input type="radio" name="kidSelect" id="kid' . $kidId . '" value="' . $kidGender . '|' . $sanitizedKidName . '|' . $kidId . '" class="form-check-input">';
+            echo '<label class="form-check-label" for="kid' . $kidId . '">';
+            echo '<img src="' . $kidPhoto . '" class="card-img-top" alt="' . $kidName . '" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px;">';
+            echo '<div class="card-body">';
+            echo '<h5 class="card-title">' . $kidName . '</h5>';
+            echo '</div>';
+            echo '</label>';
+            echo '</div>';
+        }
+    
+        echo '</div>';
+        echo '</form>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+
+        // Loading overlay and spinner
+        echo '<div class="overlay" id="overlay"></div>';
+        echo '<div class="loading-spinner loading-spinner-female" id="loadingSpinnerFemale">';
+        echo '<div class="spinner-border" role="status">';
+        echo '<span class="sr-only">Loading...</span>';
+        echo '</div>';
+        echo '</div>';
+        echo '<div class="loading-spinner loading-spinner-male" id="loadingSpinnerMale">';
+        echo '<div class="spinner-border" role="status">';
+        echo '<span class="sr-only">Loading...</span>';
+        echo '</div>';
+        echo '</div>';
+    } else {
+        // If there are no children, show message only
+        echo '<div class="container mt-10">';
+        echo '<div class="row justify-content-center align-items-center">';
+        echo '<div class="col-lg-10 col-md-12 text-center">';
+        echo '<h2 class=" " style="font-weight: bold; text-align: center; ">No Child Profiles Found</h2>';
+        echo '<p style="font-size: 18px; color: #666; margin-bottom: 30px;">You don\'t have any child profiles yet.</p>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+    }
+}
+
 // Handle auto-login from signup
 if (isset($_GET['auto_login']) && $_GET['auto_login'] == '1') {
     $enteredEmail = $_GET['email'];
@@ -241,7 +307,7 @@ function sanitizeKidName($kidName)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-xxx" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous" />
 
     <style>
      body {

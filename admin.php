@@ -188,11 +188,19 @@ h2 {
         // Show loading message
         $('.nav-link.logout-link').html('<i class="fas fa-spinner fa-spin"></i> Logging out...');
 
-        // Simulate a delay (you can remove this in a real application)
-        setTimeout(function () {
-            // Navigate to the login page after a delay
-            window.location.href = "login.html";
-        }, 3000); // 3000 milliseconds (3 seconds) delay - adjust as needed
+        // Clear localStorage immediately
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userPassword');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('loginTime');
+        localStorage.removeItem('selectedKidId');
+        localStorage.removeItem('selectedKidName');
+        localStorage.removeItem('selectedKidGender');
+        localStorage.removeItem('is_admin');
+
+        // Navigate to logout page immediately
+        window.location.href = "logout.php";
     }
 </script>
     <!-- Page Content -->

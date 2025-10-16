@@ -1580,7 +1580,7 @@ if ($result && count($result) > 0) {
                     var chooseAnotherProfileDetails = {
                         userId: <?php echo $selectedUserId; ?>,
                         performAction: function() {
-                            window.location.href = "login.php?userId=<?php echo $selectedUserId; ?>";
+                            window.location.href = "login.php";
                         },
                         successMessage: "Password is correct! Redirecting to login...",
                         errorMessage: "Incorrect password. Please try again."

@@ -1,3 +1,29 @@
+<?php
+session_start();
+require_once('config/simple_database.php');
+
+// Check if user is logged in and is admin
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.html");
+    exit();
+}
+
+// Check if user is admin
+$userId = $_SESSION['user_id'];
+$sql = "SELECT * FROM users WHERE id = " . intval($userId);
+$result = simpleQuery($sql);
+
+if (count($result) == 0) {
+    header("Location: login.html");
+    exit();
+}
+
+$user = $result[0];
+if (!isset($user['isAdmin']) || !($user['isAdmin'] == 1 || $user['isAdmin'] === true || $user['isAdmin'] === 'true')) {
+    header("Location: login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 

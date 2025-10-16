@@ -191,6 +191,9 @@
                             <div class="mb-3">
                                 <button type="button" class="btn btn-success w-100" id="demoLoginBtn">Demo Login (Portfolio)</button>
                             </div>
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-warning w-100" id="adminLoginBtn">Admin Login</button>
+                            </div>
                         </form>
                         <div class="form-link text-center">
                             <span>Vous n'avez pas de compte ? <a href="#" class="link toggle-form">Inscription</a></span>
@@ -306,6 +309,14 @@
         $("#demoLoginBtn").click(function() {
             $("#loginEmail").val("test@ww.com");
             $("#loginPassword").val("test@ww.com");
+            // Auto-submit the form
+            $("form[action='login.php']").submit();
+        });
+
+        // Admin login button
+        $("#adminLoginBtn").click(function() {
+            $("#loginEmail").val("admin@childrenuniverse.com");
+            $("#loginPassword").val("admin123");
             // Auto-submit the form
             $("form[action='login.php']").submit();
         });

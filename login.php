@@ -113,7 +113,7 @@ if (isset($_GET['auto_login']) && $_GET['auto_login'] == '1') {
     if (count($result) > 0) {
         $row = $result[0];
         if ($enteredPassword == $row['password']) {
-            if (isset($row['isAdmin']) && $row['isAdmin'] == 1) {
+            if (isset($row['isAdmin']) && ($row['isAdmin'] == 1 || $row['isAdmin'] === true || $row['isAdmin'] === 'true')) {
                 // Admin user, redirect to the admin page
                 header("Location: admin.php");
                 exit();
@@ -151,8 +151,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (count($result) > 0) {
         $row = $result[0];
         if ($enteredPassword == $row['password']) {
-            if (isset($row['isAdmin']) && $row['isAdmin'] == 1) {
+            // Debug logging for admin check
+            error_log("User login: email=" . $enteredEmail . ", isAdmin=" . (isset($row['isAdmin']) ? $row['isAdmin'] : 'not set') . ", isAdmin value=" . var_export($row['isAdmin'], true));
+            
+            if (isset($row['isAdmin']) && ($row['isAdmin'] == 1 || $row['isAdmin'] === true || $row['isAdmin'] === 'true')) {
                 // Admin user, redirect to the admin page
+                error_log("Redirecting admin user to admin.php");
                 header("Location: admin.php");
                 exit();
             } else {

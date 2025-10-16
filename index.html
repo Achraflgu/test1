@@ -86,20 +86,6 @@
     }
 </style>
 <body>
-    <!-- Check if user is already logged in and redirect to login.php -->
-    <script>
-        (function() {
-            // Check localStorage for login status
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const userId = localStorage.getItem('userId');
-            
-            // If user is logged in, redirect to login.php
-            if (isLoggedIn === 'true' && userId) {
-                window.location.href = 'login.php';
-            }
-        })();
-    </script>
-
     <div class="header animated" id="header">
         <nav>
             <img class="logo" src="./Assets/logo 1.png" alt="logo">

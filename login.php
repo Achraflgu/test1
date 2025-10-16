@@ -125,6 +125,8 @@ if (isset($_GET['auto_login']) && $_GET['auto_login'] == '1') {
             
             if ($isAdmin) {
                 // Admin user, redirect to the admin page
+                error_log("ADMIN AUTO-LOGIN SUCCESS: Redirecting admin user to admin.php");
+                $_SESSION['user_id'] = $row['id']; // Set session for admin too
                 header("Location: admin.php");
                 exit();
             } else {
@@ -180,7 +182,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             if ($isAdmin) {
                 // Admin user, redirect to the admin page
-                error_log("Redirecting admin user to admin.php");
+                error_log("ADMIN LOGIN SUCCESS: Redirecting admin user to admin.php");
+                $_SESSION['user_id'] = $row['id']; // Set session for admin too
                 header("Location: admin.php");
                 exit();
             } else {

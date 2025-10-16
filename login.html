@@ -143,6 +143,16 @@
     <!-- Check if user is already logged in and redirect to login.php -->
     <script>
         (function() {
+            // Check if this page was redirected from login.php to prevent loop
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromLoginPhp = urlParams.get('from_login_php');
+            
+            // If we came from login.php, don't redirect back to avoid loop
+            if (fromLoginPhp === '1') {
+                console.log('Came from login.php, staying on login.html to prevent redirect loop');
+                return;
+            }
+            
             // Check localStorage for login status
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             const userId = localStorage.getItem('userId');

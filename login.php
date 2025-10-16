@@ -22,15 +22,15 @@ if (!isset($_SESSION['user_id']) && !isset($_GET['auto_login']) && $_SERVER["REQ
                 console.log("Redirecting to auto_login with credentials");
                 window.location.href = "login.php?auto_login=1&email=" + encodeURIComponent(userEmail) + "&password=" + encodeURIComponent(userPassword);
             } else {
-                // User is not logged in via localStorage, redirect to login.html
+                // User is not logged in via localStorage, redirect to login.html with flag to prevent loop
                 console.log("No valid localStorage data, redirecting to login.html");
-                window.location.href = "login.html";
+                window.location.href = "login.html?from_login_php=1";
             }
         </script>';
         exit();
     } else {
-        // If localStorage_check is set but no session, redirect to login.html
-        header("Location: login.html");
+        // If localStorage_check is set but no session, redirect to login.html with flag
+        header("Location: login.html?from_login_php=1");
         exit();
     }
 }

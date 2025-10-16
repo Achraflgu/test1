@@ -5,8 +5,13 @@ require_once('config/simple_database.php');
 
 // Check if user is not logged in and not in auto-login mode and not a POST request
 if (!isset($_SESSION['user_id']) && !isset($_GET['auto_login']) && $_SERVER["REQUEST_METHOD"] != "POST") {
-    header("Location: login.html");
-    exit();
+    // Don't redirect immediately - let JavaScript handle localStorage check first
+    // Only redirect if this is a direct visit without localStorage data
+    if (!isset($_GET['localStorage_check'])) {
+        // Add a flag to indicate we need to check localStorage
+        echo '<script>window.location.href = "login.php?localStorage_check=1";</script>';
+        exit();
+    }
 }
 
 // Handle auto-login from signup
@@ -542,6 +547,23 @@ h2{
     <script>
         // localStorage Management for Login
         $(document).ready(function() {
+            // Check if this is a localStorage check request
+            <?php if (isset($_GET['localStorage_check'])): ?>
+                const isLoggedIn = localStorage.getItem('isLoggedIn');
+                const userEmail = localStorage.getItem('userEmail');
+                const userId = localStorage.getItem('userId');
+                
+                if (isLoggedIn === 'true' && userEmail && userId) {
+                    // User is logged in via localStorage, sync with PHP session
+                    window.location.href = 'login.php?auto_login=1&email=' + encodeURIComponent(userEmail) + '&password=' + encodeURIComponent(localStorage.getItem('userPassword') || '');
+                    return;
+                } else {
+                    // User is not logged in via localStorage, redirect to login.html
+                    window.location.href = 'login.html';
+                    return;
+                }
+            <?php endif; ?>
+            
             // Check if user is already logged in via localStorage
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             const userEmail = localStorage.getItem('userEmail');

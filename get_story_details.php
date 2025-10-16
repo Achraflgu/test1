@@ -5,11 +5,11 @@ require_once('config/simple_database.php');
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $storyId = $_GET['story_id'];
 
-    $storySql = "SELECT * FROM stories WHERE id = 0";
-    $stmt = $conn->prepare($storySql);\nsimpleExecute($sql);\n$storyResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $storySql = "SELECT * FROM stories WHERE id = " . intval($storyId);
+    $storyResult = simpleQuery($storySql);
 
-    if ($storyResult->num_rows > 0) {
-        $storyRow = $storyResult->fetch_assoc();
+    if (count($storyResult) > 0) {
+        $storyRow = $storyResult[0];
 
         echo '<h5 class="modal-title">' . $storyRow['story_title'] . '</h5>';
         echo '<p class="modal-text">' . $storyRow['description'] . '</p>';

@@ -39,11 +39,9 @@
         </thead>
         <tbody>
             <?php
-            require_once('config/database.php');
-$database = new Database();
-$conn = $database->getConnection();
+            require_once('config/simple_database.php');
             $usersSql = "SELECT * FROM users";
-            $stmt = $conn->prepare($usersSql);\n$stmt->execute();\n$usersResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $usersResult = simpleQuery($usersSql);
 
             foreach ($usersResult as $userRow) {
                 echo '<tr>';

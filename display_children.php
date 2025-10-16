@@ -1,23 +1,13 @@
 <?php
 require_once('config/simple_database.php');
-$database = new Database();
-$conn = $database->getConnection();
 
 // Fonction pour afficher les enfants pour un ID utilisateur donné
 function displayChildrenForUser($userId)
 {
-    global $conn;
+    $childrenSql = "SELECT * FROM children WHERE user_id = " . intval($userId);
+    $childrenResult = simpleQuery($childrenSql);
 
-    $childrenSql = "SELECT * FROM children WHERE user_id = $userId";
-    $stmt = $conn->prepare($childrenSql);\nsimpleExecute($sql);\n$childrenResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    $childrenData = array();
-
-    foreach ($childrenResult as $childRow) {
-        $childrenData[] = $childRow;
-    }
-
-    return $childrenData;
+    return $childrenResult;
 }
 
 // Traitement des requêtes AJAX
@@ -25,7 +15,7 @@ if (isset($_POST['action'])) {
     if ($_POST['action'] == 'get_users') {
         // Requête AJAX pour obtenir et afficher les utilisateurs
         $usersSql = "SELECT * FROM users";
-        $stmt = $conn->prepare($usersSql);\nsimpleExecute($sql);\n$usersResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $usersResult = simpleQuery($usersSql);
 
         echo '<table class="table">
                 <thead>
@@ -90,9 +80,9 @@ if (isset($_POST['action'])) {
         $childUserId = $_POST['childUserId'];
         $childName = $_POST['childName'];
 
-        // Perform the database insertion (replace this with your actual insertion code)
-        $insertChildSql = "INSERT INTO children (user_id, kid_name) VALUES ('$childUserId', '$childName')";
-        $conn->query($insertChildSql);
+        // Perform the database insertion
+        $insertChildSql = "INSERT INTO children (user_id, kid_name) VALUES (" . intval($childUserId) . ", '" . addslashes($childName) . "')";
+        simpleExecute($insertChildSql);
 
         // Afficher la table mise à jour des enfants
         $children = displayChildrenForUser($childUserId);
@@ -132,28 +122,28 @@ if (isset($_POST['action'])) {
         $modifyChildAge = $_POST['modifyChildAge'];
 
         // Mettre à jour les données de l'enfant dans la base de données
-        $updateChildSql = "UPDATE children SET kid_name = '$modifyChildName', kid_age = '$modifyChildAge' WHERE id = $modifyChildId";
+        $updateChildSql = "UPDATE children SET kid_name = '" . addslashes($modifyChildName) . "', kid_age = " . intval($modifyChildAge) . " WHERE id = " . intval($modifyChildId);
 
-        if ($conn->query($updateChildSql) === TRUE) {
+        try {
+            simpleExecute($updateChildSql);
             echo 'Child updated successfully';
-        } else {
-            // Log any errors to the server logs
-            error_log('Error updating child: ' . $conn->errorInfo()[2]);
-            echo 'Error updating child: ' . $conn->errorInfo()[2];
+        } catch (Exception $e) {
+            error_log('Error updating child: ' . $e->getMessage());
+            echo 'Error updating child: ' . $e->getMessage();
         }
     } elseif ($_POST['action'] == 'delete_child') {
         // Requête AJAX pour supprimer un enfant
         $deleteChildId = $_POST['deleteChildId'];
 
         // Supprimer l'enfant de la base de données
-        $deleteChildSql = "DELETE FROM children WHERE id = $deleteChildId";
+        $deleteChildSql = "DELETE FROM children WHERE id = " . intval($deleteChildId);
 
-        if ($conn->query($deleteChildSql) === TRUE) {
+        try {
+            simpleExecute($deleteChildSql);
             echo 'Child deleted successfully';
-        } else {
-            // Log any errors to the server logs
-            error_log('Error deleting child: ' . $conn->errorInfo()[2]);
-            echo 'Error deleting child: ' . $conn->errorInfo()[2];
+        } catch (Exception $e) {
+            error_log('Error deleting child: ' . $e->getMessage());
+            echo 'Error deleting child: ' . $e->getMessage();
         }
     }
 }

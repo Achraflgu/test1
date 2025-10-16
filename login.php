@@ -3,6 +3,12 @@ session_start();
 
 require_once('config/simple_database.php');
 
+// Check if user is not logged in and not in auto-login mode
+if (!isset($_SESSION['user_id']) && !isset($_GET['auto_login'])) {
+    header("Location: login.html");
+    exit();
+}
+
 // Handle auto-login from signup
 if (isset($_GET['auto_login']) && $_GET['auto_login'] == '1') {
     $enteredEmail = $_GET['email'];

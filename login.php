@@ -3,8 +3,8 @@ session_start();
 
 require_once('config/simple_database.php');
 
-// Check if user is not logged in and not in auto-login mode
-if (!isset($_SESSION['user_id']) && !isset($_GET['auto_login'])) {
+// Check if user is not logged in and not in auto-login mode and not a POST request
+if (!isset($_SESSION['user_id']) && !isset($_GET['auto_login']) && $_SERVER["REQUEST_METHOD"] != "POST") {
     header("Location: login.html");
     exit();
 }
@@ -581,9 +581,9 @@ h2{
                         try {
                             const data = JSON.parse(response);
                             if (data.success === false) {
-                                // Login failed - redirect to login.html
+                                // Login failed - show error message
                                 alert(data.error);
-                                window.location.href = 'login.html';
+                                // Don't redirect, let user try again
                             } else {
                                 // Login successful
                                 localStorage.setItem('isLoggedIn', 'true');
@@ -608,8 +608,8 @@ h2{
                         }
                     },
                     error: function() {
-                        alert('An error occurred during login.');
-                        window.location.href = 'login.html';
+                        alert('An error occurred during login. Please try again.');
+                        // Don't redirect, let user try again
                     }
                 });
             });
